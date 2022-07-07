@@ -4,6 +4,8 @@ import { useRouter } from 'next/router'
 
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 import Button from '@mui/material/Button'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -22,12 +24,21 @@ import AddIcon from '@mui/icons-material/Add'
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
 import Editable from 'src/components/Editable'
 import Autocomplete from '@mui/material/Autocomplete'
+import NativeSelect from '@mui/material/NativeSelect'
 
 
 // ** local
 import EnhancedTable from 'src/views/tables/EnhancedTable'
 import { useNotifications } from 'src/util/notifications'
 import { APIRequest, useUniqueTricks } from 'src/util/backend'
+
+const SelectMark = (props) => {
+  return (
+    <NativeSelect onChange={e => {props.onChange(e)}}>
+      { Array.from({length: 21}, (v, k) => k*0.5).map(i => (<option value={i}>{i}</option>))}
+    </NativeSelect>
+  )
+}
 
 const TabFlights = ({ comp, run, rid }) => {
   // ** notification messages
@@ -59,7 +70,6 @@ const TabFlights = ({ comp, run, rid }) => {
   }
 
   const nextPilot = () => {
-    console.log(currentFlight, run.pilots.length)
     if (currentFlight+1 >= run.pilots.length)  return
     currentFlight += 1
     setPilot(run.pilots[currentFlight])
@@ -188,7 +198,6 @@ const TabFlights = ({ comp, run, rid }) => {
       </Grid>
 }
       <Grid container spacing={2}>
-        separator
       </Grid>
       <Grid container spacing={2}>
         {/* 1st column / maneuvers*/}
@@ -251,25 +260,17 @@ const TabFlights = ({ comp, run, rid }) => {
                   <Typography>{ j.name }</Typography>
                 </TableCell>
                 <TableCell>
-                  <TextField type="number" InputProps={{ inputProps: { min: "0", max: "10", step: "0.5" } }} onChange={e => {
-                    setMark("technical", j, e.target.value)
-                  }}/>
+                  <SelectMark onChange={e => {setMark('technical', j, e.target.value)}}/>
                 </TableCell>
                 <TableCell>
-                  <TextField type="number" InputProps={{ inputProps: { min: "0", max: "10", step: "0.5" } }} onChange={e => {
-                    setMark("choreography", j, e.target.value)
-                  }}/>
+                  <SelectMark onChange={e => {setMark('choreography', j, e.target.value)}}/>
                 </TableCell>
                 <TableCell>
-                  <TextField type="number" InputProps={{ inputProps: { min: "0", max: "10", step: "0.5" } }} onChange={e => {
-                    setMark("landing", j, e.target.value)
-                  }}/>
+                  <SelectMark onChange={e => {setMark('landing', j, e.target.value)}}/>
                 </TableCell>
 {comp.type == 'synchro' &&
                 <TableCell>
-                  <TextField type="number" InputProps={{ inputProps: { min: "0", max: "10", step: "0.5" } }} onChange={e => {
-                    setMark("synchro", j, e.target.value)
-                  }}/>
+                  <SelectMark onChange={e => {setMark('synchro', j, e.target.value)}}/>
                 </TableCell>
 }
             </TableRow>
