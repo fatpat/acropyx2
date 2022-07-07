@@ -31,3 +31,4 @@ python-multipart
 python-jose[cryptography]
 pytest
 requests
+fastapi-cache2

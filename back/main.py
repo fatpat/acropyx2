@@ -3,6 +3,8 @@ import core.logging
 from fastapi import FastAPI, Request
 from starlette.middleware.cors import CORSMiddleware
 import time
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.inmemory import InMemoryBackend
 
 from core.config import settings
 from core.database import clean_database
@@ -51,6 +53,7 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup_event():
     log.debug("starup_event()")
+    FastAPICache.init(InMemoryBackend())
     if "test" in settings.DATABASE:
         log.debug(f"Using a testing database")
         await clean_database()

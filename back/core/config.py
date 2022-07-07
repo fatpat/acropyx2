@@ -22,6 +22,8 @@ class Settings(BaseSettings):
     ADMIN_USER: str = 'admin'
     ADMIN_PASS: str = None
 
+    CACHE_EXPIRES: int = 60
+
     class Config:
         case_sensitive = True
 
