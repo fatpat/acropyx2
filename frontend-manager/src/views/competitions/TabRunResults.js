@@ -120,7 +120,7 @@ const TabResults = ({ code, rid }) => {
     )
 })}
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{width: "30%"}}>
                     <p>warnings: {r.final_marks.warnings.length}
 { r.final_marks.warnings.length > 0 &&
                       <List>
@@ -131,6 +131,15 @@ const TabResults = ({ code, rid }) => {
 }
                     </p>
                     <p>Malus: {r.final_marks.malus}%</p>
+{ r.final_marks.notes.length > 0 &&
+                    <p>
+                      <List>
+  { r.final_marks.notes.map(n => (
+                        <ListItem>{n}</ListItem>
+  ))}
+                      </List>
+                    </p>
+}
                     { r.did_not_start && <p>DID NOT START</p>}
                   </TableCell>
                   <TableCell>
