@@ -81,7 +81,7 @@ const TabFlights = ({ comp, run, rid }) => {
     const body = {
       tricks: data.tricks.filter(t => t!=null).map(t => t.name),
       marks: data.marks,
-      did_no_start: data.did_not_start,
+      did_not_start: data.did_not_start,
       warnings: data.warnings,
     }
 
@@ -125,7 +125,7 @@ const TabFlights = ({ comp, run, rid }) => {
     const body = {
       tricks: data.tricks.filter(t => t!=null).map(t => t.name),
       marks: data.marks,
-      did_no_start: data.did_not_start,
+      did_not_start: data.did_not_start,
       warnings: data.warnings,
     }
 
@@ -137,24 +137,17 @@ const TabFlights = ({ comp, run, rid }) => {
 
     if (err) {
         error(`error while saving score: ${err}`)
+        return
     }
 
     success(`${pilot.name}'s flights saved with a ${retData.score} score`)
   }
 
-  const headCells = [
-    {
-      id: 'rank',
-    },
-    {
-      id: 'pilot',
-      rewrite: (p) => p.name,
-    },
-    {
-      id: 'score',
-      numeric: true,
-    }
-  ]
+  const didNotStart = async(e) => {
+    if (!confirm('Are you sure to publish a DNS flight ?')) return
+    data.did_not_start = true
+    saveResults(true)
+  }
 
   useEffect(() => {
     currentFlight = 0
@@ -345,16 +338,16 @@ const TabFlights = ({ comp, run, rid }) => {
           </Grid>
           {/* actions */}
           <Grid container xs={12}>
-              <Grid item xs={6}>
+              <Grid item xs={3}>
                 <Button variant="contained" disabled={!resultsOK} onClick={e => saveResults(false)}>Save Results</Button>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={3}>
                 <Button variant="contained" disabled={!resultsOK} onClick={e => saveResults(true)}>Save & Publish Results</Button>
               </Grid>
-{/*
-              <Grid item xs={6}>
-                <Button disabled={!resultsOK}>Save Results + next Run</Button>
+              <Grid item xs={3}>
+                <Button onClick={didNotStart}>Did not start</Button>
               </Grid>
+{/*
               <Grid item xs={6}>
                 <Button disabled={!resultsOK}>Publish Results + next Run</Button>
               </Grid>

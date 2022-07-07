@@ -666,6 +666,7 @@ class Competition(CompetitionNew):
             malus=0,
         )
 
+        # for lukas :-)
         if flight.did_not_start:
             mark.notes.append(f"Got 0 because of DNS")
             return mark
