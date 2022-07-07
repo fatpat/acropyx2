@@ -203,7 +203,7 @@ const TabFlights = ({ comp, run, rid }) => {
                       key="autocomplete-trick-{i}"
                       options={uniqueTricks}
                       getOptionLabel={(p) => `${p.name} (${p.acronym}) (${p.technical_coefficient})`}
-                      renderInput={(params) => <TextField {...params} name="trick" label="Trick" />}
+                      renderInput={(params) => <TextField {...params} name="trick" />}
                       onChange={(e, v) => {
                           data.tricks[i] = v
                           simulateScore(data)
