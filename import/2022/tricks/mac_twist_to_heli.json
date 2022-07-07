@@ -18,8 +18,8 @@
     {"name": "twisted","bonus": 4.5},
     {"name": "reverse","bonus": 3.5}
   ],
-  "first_trick": 0,
-  "no_first_trick": 0,
-  "last_trick": 0,
-  "no_last_trick": 0
+  "first_maneuver": 0,
+  "no_first_maneuver": 0,
+  "last_maneuver": 0,
+  "no_last_maneuver": 0
 }

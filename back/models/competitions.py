@@ -22,7 +22,7 @@ from models.results import RunResults, CompetitionResults, CompetitionPilotResul
 
 from core.database import db, PyObjectId
 from core.config import settings
-from core.utils import weight_average, average
+from core.utils import weight_average, average, ordinal
 
 log = logging.getLogger(__name__)
 collection = db.competitions
@@ -684,6 +684,43 @@ class Competition(CompetitionNew):
         else:
             config = run.config
 
+        #
+        # check if a trick is not perform in a allowed position (not the first or not as a last x maneuvers)
+        #
+        for i, trick in enumerate(flight.tricks):
+            t = await Trick.get(trick.base_trick)
+
+            # the trick MUST be performed in the X first maneuvers of the run
+            if t.first_maneuver > 0 and i <= t.first_maneuver:
+                if t.first_maneuver == 1:
+                    mark.warnings.append(f"{trick.name} must be the first maneuver")
+                else:
+                    mark.warnings.append(f"{trick.name} must be one of the first {t.first_maneuver} maneuvers")
+
+            # the trick can't be performed in the X first maneuvers of the run
+            if t.no_first_maneuver > 0 and i > t.no_first_maneuver:
+                if t.no_first_maneuver == 1:
+                    mark.warnings.append(f"{trick.name} can't be the first maneuver")
+                else:
+                    mark.warnings.append(f"{trick.name} can't be one of the first {t.no_first_maneuver} maneuvers")
+
+            # the trick MUST be performed in the X last maneuvers of the run
+            if t.last_maneuver > 0 and i >= len(flight.tricks) - t.last_maneuver:
+                if t.last_maneuver == 1:
+                    mark.warnings.append(f"{trick.name} must be the last maneuver")
+                else:
+                    mark.warnings.append(f"{trick.name} must be one of the last {t.last_maneuver} maneuvers")
+
+            # the trick can't be performed in the X last maneuvers of the run
+            if t.no_last_maneuver > 0 and i >= len(flight.tricks) - t.no_last_maneuver:
+                if t.no_last_maneuver == 1:
+                    mark.warnings.append(f"{trick.name} can't be the last maneuver")
+                else:
+                    mark.warnings.append(f"{trick.name} can't be one of the last {t.no_last_maneuver} maneuvers")
+        #
+        # endof check if a trick is not perform in a allowed position (not the first or not as a last x maneuvers)
+        #
+
 
         #
         # count previous warnings and check if not previous DSQ
@@ -745,7 +782,6 @@ class Competition(CompetitionNew):
         #
         # endof calculating the weight average of the judges marks
         #
-
 
         #
         # ignore trick with bonus higher than the maximum bonus tricks allowed

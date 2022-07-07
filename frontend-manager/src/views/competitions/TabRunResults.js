@@ -4,6 +4,8 @@ import { useRouter } from 'next/router'
 
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
+import ListItem from '@mui/material/ListItem'
+import List from '@mui/material/List'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
@@ -119,7 +121,15 @@ const TabResults = ({ code, rid }) => {
 })}
                   </TableCell>
                   <TableCell>
-                    <p>warnings: {r.final_marks.warnings.length}</p>
+                    <p>warnings: {r.final_marks.warnings.length}
+{ r.final_marks.warnings.length > 0 &&
+                      <List>
+  { r.final_marks.warnings.map(w => (
+                        <ListItem>{w}</ListItem>
+  ))}
+                      </List>
+}
+                    </p>
                     <p>Malus: {r.final_marks.malus}%</p>
                     { r.did_not_start && <p>DID NOT START</p>}
                   </TableCell>

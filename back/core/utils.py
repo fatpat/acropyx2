@@ -33,3 +33,6 @@ def float3digits(cls, v) -> float:
     if v is None:
         return 0
     return round(v, 3)
+
+def ordinal(n: int):
+    return str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))

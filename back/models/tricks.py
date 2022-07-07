@@ -164,9 +164,9 @@ class Trick(BaseModel):
     @staticmethod
     async def get(id, deleted: bool = False):
         if deleted:
-            search = {"_id": id}
+            search = {"$or": [{"_id": id}, {"name": id}]}
         else:
-            search = {"_id": id, "deleted": None}
+            search = {"$or": [{"_id": id}, {"name": id}], "deleted": None}
         trick = await collection.find_one(search)
         if trick is None:
             raise HTTPException(404, f"Trick {id} not found")

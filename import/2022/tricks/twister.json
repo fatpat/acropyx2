@@ -14,8 +14,8 @@
   "connection": "Forbidden connection to Helicopter",
   "technical_coefficient": 1.8,
   "bonuses": [],
-  "first_trick": 0,
-  "no_first_trick": 0,
-  "last_trick": 0,
-  "no_last_trick": 0
+  "first_maneuver": 0,
+  "no_first_maneuver": 0,
+  "last_maneuver": 0,
+  "no_last_maneuver": 0
 }

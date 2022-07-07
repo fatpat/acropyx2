@@ -23,8 +23,8 @@
     {"name": "full twisted","bonus": 6},
     {"name": "to twisted sat","bonus": 3}
   ],
-  "first_trick": 0,
-  "no_first_trick": 0,
-  "last_trick": 0,
-  "no_last_trick": 0
+  "first_maneuver": 0,
+  "no_first_maneuver": 0,
+  "last_maneuver": 0,
+  "no_last_maneuver": 0
 }
