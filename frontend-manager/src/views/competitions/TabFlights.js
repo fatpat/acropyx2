@@ -362,15 +362,6 @@ const TabFlights = ({ comp, run, rid }) => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid container spacing={7}>
-        <Grid item xs={12} sm={12}>
-          <EnhancedTable
-            rows={run.flights}
-            headCells={headCells}
-            orderById='rank'
-          />
-        </Grid>
-      </Grid>
     </CardContent>
   )
 }
