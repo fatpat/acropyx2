@@ -16,7 +16,9 @@
   "bonuses": [
     {"name": "twisted","bonus": 1.5},
     {"name": "twisted exit","bonus": 3},
-    {"name": "devil twist","bonus": 4.5}
+    {"name": "devil twist","bonus": 4.5},
+    {"name": "flip","bonus": 4.5},
+    {"name": "double flip","bonus": 5.5}
   ],
   "first_trick": 0,
   "no_first_trick": 0,
