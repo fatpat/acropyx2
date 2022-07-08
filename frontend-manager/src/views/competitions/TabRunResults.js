@@ -116,7 +116,7 @@ const TabResults = ({ code, rid }) => {
                   <TableCell>
 {r.tricks.map((t, i) => {
     return(
-        <p key={i}>{t.name}</p>
+        <p key={i}>{t.name} ({t.technical_coefficient}, {t.bonus}%)</p>
     )
 })}
                   </TableCell>
