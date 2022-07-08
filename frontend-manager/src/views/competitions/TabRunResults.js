@@ -53,20 +53,6 @@ const TabResults = ({ code, rid }) => {
     setResults(data)
   }
 
-  const headCells = [
-    {
-      id: 'rank',
-    },
-    {
-      id: 'pilot',
-      rewrite: (p) => p.name,
-    },
-    {
-      id: 'score',
-      numeric: true,
-    }
-  ]
-
   useEffect(() => {
     loadResults()
   }, [])
@@ -95,7 +81,7 @@ const TabResults = ({ code, rid }) => {
               <TableHead>
                 <TableRow>
                   <TableCell>Rank</TableCell>
-                  <TableCell>Pilot</TableCell>
+                  <TableCell>Team</TableCell>
                   <TableCell>Tricks</TableCell>
                   <TableCell>Warnings</TableCell>
                   <TableCell>Technicity</TableCell>
@@ -112,7 +98,10 @@ const TabResults = ({ code, rid }) => {
                   <TableCell>
                     {rank+1}
                   </TableCell>
-                  <TableCell>{r.pilot.name}</TableCell>
+                  <TableCell>
+                    {results.type == "solo" && r.pilot.name}
+                    {results.type == "synchro" && <p>{r.team.name}<ul><li>{r.team.pilots[0].name}</li><li>{r.team.pilots[1].name}</li></ul></p>}
+                  </TableCell>
                   <TableCell>
 {r.tricks.map((t, i) => {
     return(

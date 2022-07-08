@@ -90,7 +90,10 @@ const TabResults = ({ code }) => {
 { results.overall_results.map((r,rank) => (
                 <TableRow key={`result-${rank}`}>
                   <TableCell>{rank+1}</TableCell>
-                  <TableCell>{r.pilot.name}</TableCell>
+                  <TableCell>
+                    {results.type == "solo" && r.pilot.name}
+                    {results.type == "synchro" && <p>{r.team.name}<ul><li>{r.team.pilots[0].name}</li><li>{r.team.pilots[1].name}</li></ul></p>}
+                  </TableCell>
                   <TableCell>
                     {r.result_per_run.map((rr, rid) => (`Run ${rid+1}`)).reduce((res, v) => {
                       if (!res) return [v]

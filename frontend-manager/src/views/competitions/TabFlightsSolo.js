@@ -85,7 +85,7 @@ const TabFlights = ({ comp, run, rid }) => {
       warnings: data.warnings,
     }
 
-    const [err, retData, headers] = await APIRequest("/scores/simulate/solo", {
+    const [err, retData, headers] = await APIRequest(`/competitions/${comp.code}/runs/${rid}/flights/${pilot.civlid}/new?save=${false}`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(body),
@@ -238,11 +238,6 @@ const TabFlights = ({ comp, run, rid }) => {
           <TableCell>
             Landing
           </TableCell>
-{comp.type == 'synchro' &&
-          <TableCell>
-            Synchro
-          </TableCell>
-}
       </TableRow>
     </TableHead>
             <TableBody>
@@ -261,11 +256,6 @@ const TabFlights = ({ comp, run, rid }) => {
                 <TableCell>
                   <SelectMark onChange={e => {setMark('landing', j, e.target.value)}}/>
                 </TableCell>
-{comp.type == 'synchro' &&
-                <TableCell>
-                  <SelectMark onChange={e => {setMark('synchro', j, e.target.value)}}/>
-                </TableCell>
-}
             </TableRow>
 )})}
             </TableBody>
@@ -300,11 +290,6 @@ const TabFlights = ({ comp, run, rid }) => {
                   <TableCell>
                     <Typography>Landing: {result.judges_mark.landing ?? ""}</Typography>
                   </TableCell>
-{comp.type == 'synchro' &&
-                  <TableCell>
-                    <Typography>Synchro: {result.judges_mark.synchro ?? ""}</Typography>
-                  </TableCell>
-}
                 </TableRow>
                 <TableRow>
                   <TableCell>
@@ -319,11 +304,6 @@ const TabFlights = ({ comp, run, rid }) => {
                   <TableCell>
                     <Typography>Landing: {result.landing ?? ""}</Typography>
                   </TableCell>
-{comp.type == 'synchro' &&
-                  <TableCell>
-                    <Typography>Synchro: {result.synchro ?? ""}</Typography>
-                  </TableCell>
-}
                 </TableRow>
                 <TableRow>
                   <TableCell>

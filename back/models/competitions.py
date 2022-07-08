@@ -499,7 +499,7 @@ class Competition(CompetitionNew):
         )
 
 
-    async def flight_convert(self, civlid: int, flight: FlightNew) -> Flight:
+    async def flight_convert(self, id, flight: FlightNew) -> Flight:
         tricks = []
         errors = []
         for trick_name in flight.tricks:
@@ -516,25 +516,38 @@ class Competition(CompetitionNew):
             errors = ' '.join(errors)
             raise HTTPException(400, f"Unknown trick(s): {errors}")
 
+        teamid=""
+        pilotid=0
+        if self.type == CompetitionType.solo:
+            pilotid=id
+        if self.type == CompetitionType.synchro:
+            teamid=id
 
         return Flight(
-                pilot = civlid,
+                pilot = pilotid,
+                team = teamid,
                 tricks = tricks,
                 marks = flight.marks,
                 did_not_start = flight.did_not_start,
                 warnings = flight.warnings,
         )
 
-    async def flight_save(self, run_i: int, civlid: int, flight: FlightNew, save: bool=False, published: bool=False) -> FinalMark:
+    async def flight_save(self, run_i: int, id, flight: FlightNew, save: bool=False, published: bool=False) -> FinalMark:
         run = await self.run_get(run_i)
 
-        if civlid not in run.pilots:
-            raise HTTPException(400, f"Pilot #{civlid} does not participate in the run number #{i} of the comp ({self.name})")
+        if self.type == CompetitionType.solo:
+            if id not in run.pilots:
+                raise HTTPException(400, f"Pilot #{id} does not participate in the run number #{i} of the comp ({self.name})")
+            if id not in self.pilots:
+                raise HTTPException(400, f"Pilot #{id} does not participate in this comp ({self.name})")
 
-        if civlid not in self.pilots:
-            raise HTTPException(400, f"Pilot #{civlid} does not participate in this comp ({self.name})")
+        if self.type == CompetitionType.synchro:
+            if id not in run.teams:
+                raise HTTPException(400, f"Team #{id} does not participate in the run number #{i} of the comp ({self.name})")
+            if id not in self.teams:
+                raise HTTPException(400, f"Team #{id} does not participate in this comp ({self.name})")
 
-        new_flight = await self.flight_convert(civlid, flight)
+        new_flight = await self.flight_convert(id, flight)
         mark = await self.calculate_score(flight=new_flight, run_i=run_i)
         if not save:
             return mark
@@ -543,7 +556,7 @@ class Competition(CompetitionNew):
         new_flight.published = published
 
         for i, f in enumerate(self.runs[run_i].flights):
-            if f.pilot == new_flight.pilot:
+            if f.pilot == new_flight.pilot or f.team == new_flight.team:
                 self.runs[run_i].flights[i] = new_flight
                 await self.save()
                 return mark
@@ -572,16 +585,29 @@ class Competition(CompetitionNew):
                     score = result.final_marks.score
                 )
 
-                if result.pilot not in overall:
-                    overall[result.pilot] = CompetitionPilotResults(
-                        pilot=result.pilot,
-                        score=0,
-                        result_per_run=[]
-                    )
+                if self.type == CompetitionType.solo:
+                    if result.pilot not in overall:
+                        overall[result.pilot] = CompetitionPilotResults(
+                            pilot=result.pilot,
+                            team='',
+                            score=0,
+                            result_per_run=[]
+                        )
 
-                overall[result.pilot].score += result.final_marks.score
-                overall[result.pilot].result_per_run.append(run_result_summary)
+                    overall[result.pilot].score += result.final_marks.score
+                    overall[result.pilot].result_per_run.append(run_result_summary)
 
+                if self.type == CompetitionType.synchro:
+                    if result.team not in overall:
+                        overall[result.team] = CompetitionPilotResults(
+                            pilot=0,
+                            team=result.team,
+                            score=0,
+                            result_per_run=[]
+                        )
+
+                    overall[result.team].score += result.final_marks.score
+                    overall[result.team].result_per_run.append(run_result_summary)
 
         overall_results = list(overall.values())
         overall_results.sort(key=lambda e: e.score)
@@ -903,7 +929,7 @@ class Competition(CompetitionNew):
             mark.choreography = mark.judges_mark.choreography * mark_percentage.choreography / 100 
         mark.landing = mark.judges_mark.landing * mark_percentage.landing / 100
 
-        if type == CompetitionType.synchro:
+        if self.type == CompetitionType.synchro:
             mark.synchro = mark.judges_mark.synchro * mark_percentage.synchro / 100
 
         mark.bonus = (mark.technical + mark.choreography) * mark.bonus_percentage / 100

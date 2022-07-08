@@ -9,6 +9,7 @@ from datetime import datetime
 
 from models.flights import Flight, FlightExport
 from models.pilots import Pilot
+from models.teams import Team, TeamExport
 
 from core.config import settings
 from core.utils import float3digits
@@ -62,7 +63,8 @@ class RunResultSummary(BaseModel):
         }
 
 class CompetitionPilotResultsExport(BaseModel):
-    pilot: Pilot
+    pilot: Optional[Pilot]
+    team: Optional[TeamExport]
     result_per_run: List[RunResultSummary]
     score: float
 
@@ -71,6 +73,7 @@ class CompetitionPilotResultsExport(BaseModel):
 
 class CompetitionPilotResults(BaseModel):
     pilot: int
+    team: str
     result_per_run: List[RunResultSummary]
     score: float
 
@@ -95,8 +98,20 @@ class CompetitionPilotResults(BaseModel):
         }
 
     async def export(self) -> CompetitionPilotResultsExport:
+        try:
+          pilot = await Pilot.get(self.pilot),
+        except:
+          pilot = None
+
+        try:
+          team = await Team.get(self.team)
+          team = await team.export()
+        except Exception as e:
+          team = None
+
         return CompetitionPilotResultsExport(
-            pilot = await Pilot.get(self.pilot),
+            pilot = pilot,
+            team = team,
             result_per_run = self.result_per_run,
             score = self.score,
         )

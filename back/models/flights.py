@@ -8,6 +8,7 @@ from enum import Enum
 from datetime import datetime
 
 from models.pilots import Pilot
+from models.teams import Team, TeamExport
 from models.tricks import Trick, UniqueTrick
 from models.marks import JudgeMark, FinalMark, FinalMarkExport, JudgeMarkExport
 
@@ -16,7 +17,8 @@ from core.config import settings
 log = logging.getLogger(__name__)
 
 class FlightExport(BaseModel):
-    pilot: Pilot
+    pilot: Optional[Pilot]
+    team: Optional[TeamExport]
     tricks: List[UniqueTrick]
     marks: List[JudgeMarkExport]
     did_not_start: bool = False
@@ -26,6 +28,7 @@ class FlightExport(BaseModel):
 
 class Flight(BaseModel):
     pilot: int
+    team: str
     tricks: List[UniqueTrick]
     marks: List[JudgeMark]
     did_not_start: bool = False
@@ -52,8 +55,20 @@ class Flight(BaseModel):
         for mark in self.marks:
             marks.append(await mark.export())
 
+        try:
+            pilot = await Pilot.get(self.pilot)
+        except:
+            pilot = None
+
+        try:
+            team = await Team.get(self.team)
+            team = await team.export()
+        except:
+            team = None
+
         return FlightExport(
-            pilot = await Pilot.get(self.pilot),
+            pilot = pilot,
+            team = team,
             tricks = self.tricks,
             marks = marks,
             did_not_start = self.did_not_start,

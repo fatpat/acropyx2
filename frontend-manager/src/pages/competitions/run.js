@@ -81,7 +81,8 @@ import TabJudges from 'src/views/competitions/TabJudges'
 import TabConfig from 'src/views/competitions/TabConfig'
 import TabRunResults from 'src/views/competitions/TabRunResults'
 import TabRepeatableTricks from 'src/views/competitions/TabRepeatableTricks'
-import TabFlights from 'src/views/competitions/TabFlights'
+import TabFlightsSolo from 'src/views/competitions/TabFlightsSolo'
+import TabFlightsSynchro from 'src/views/competitions/TabFlightsSynchro'
 
 
 const Tab = styled(MuiTab)(({ theme }) => ({
@@ -405,7 +406,8 @@ const RunPage = () => {
               <TabConfig config={run.config} update={v => setConfig(v) } type={comp.type}/>
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value='flights'>
-              <TabFlights comp={comp} run={run} rid={rid}/>
+{ comp.type == "solo" && <TabFlightsSolo comp={comp} run={run} rid={rid}/>}
+{ comp.type == "synchro" && <TabFlightsSynchro comp={comp} run={run} rid={rid}/>}
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value='starting_order'>
               <TableContainer>

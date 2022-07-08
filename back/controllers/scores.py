@@ -42,9 +42,9 @@ class ScoreCtrl:
             errors = ", ".join(errors)
             raise HTTPException(status_code=400, detail=f"Some tricks are unknown for a {type} run: {errors}")
 
-        log.debug(tricks)
         f = Flight(
             pilot = 0,
+            team = '',
             tricks=tricks,
             marks=flight.marks,
             did_not_start=flight.did_not_start,

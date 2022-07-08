@@ -317,14 +317,15 @@ async def run_reopen(id: str, i: int):
     await comp.run_reopen(i)
 
 @competitions.post(
-    "/{id}/runs/{i}/flights/{civlid}/new",
+    "/{id}/runs/{i}/flights/{pilot_team_id}/new",
     response_description="Simulate a run and get the detail score",
     response_model=FinalMarkExport,
     dependencies=[Depends(auth)],
 )
-async def flight_save(id: str, i: int, civlid: int, save: bool, published:bool = False, flight: FlightNew = Body(...)):
+async def flight_save(id: str, i: int, pilot_team_id, save: bool, published:bool = False, flight: FlightNew = Body(...)):
+    log.debug(f"flight_save {pilot_team_id}")
     comp = await Competition.get(id)
-    mark = await comp.flight_save(run_i=i, civlid=civlid, flight=flight, save=save, published=published)
+    mark = await comp.flight_save(run_i=i, id=pilot_team_id, flight=flight, save=save, published=published)
     return await mark.export()
 
 @competitions.get(
