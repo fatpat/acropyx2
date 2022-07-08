@@ -28,7 +28,7 @@ class FlightExport(BaseModel):
 
 class Flight(BaseModel):
     pilot: int
-    team: str
+    team: Optional[str]
     tricks: List[UniqueTrick]
     marks: List[JudgeMark]
     did_not_start: bool = False

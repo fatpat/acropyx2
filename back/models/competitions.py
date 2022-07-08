@@ -536,14 +536,14 @@ class Competition(CompetitionNew):
         run = await self.run_get(run_i)
 
         if self.type == CompetitionType.solo:
-            if id not in run.pilots:
-                raise HTTPException(400, f"Pilot #{id} does not participate in the run number #{i} of the comp ({self.name})")
-            if id not in self.pilots:
+            if int(id) not in run.pilots:
+                raise HTTPException(400, f"Pilot #{id} does not participate in the run number #{run_i} of the comp ({self.name})")
+            if int(id) not in self.pilots:
                 raise HTTPException(400, f"Pilot #{id} does not participate in this comp ({self.name})")
 
         if self.type == CompetitionType.synchro:
             if id not in run.teams:
-                raise HTTPException(400, f"Team #{id} does not participate in the run number #{i} of the comp ({self.name})")
+                raise HTTPException(400, f"Team #{id} does not participate in the run number #{run_i} of the comp ({self.name})")
             if id not in self.teams:
                 raise HTTPException(400, f"Team #{id} does not participate in this comp ({self.name})")
 
@@ -555,8 +555,10 @@ class Competition(CompetitionNew):
         new_flight.final_marks = mark
         new_flight.published = published
 
+        log.debug(new_flight)
+
         for i, f in enumerate(self.runs[run_i].flights):
-            if f.pilot == new_flight.pilot or f.team == new_flight.team:
+            if (self.type == CompetitionType.solo and f.pilot == new_flight.pilot) or (self.type == CompetitionType.synchro and f.team == new_flight.team):
                 self.runs[run_i].flights[i] = new_flight
                 await self.save()
                 return mark

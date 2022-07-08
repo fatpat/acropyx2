@@ -149,7 +149,7 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
     },
     {
       id: 'Team',
-      rewrite: (p) => p.name,
+      rewrite: (p) => p && p.name,
     },
     {
       id: 'score',
@@ -181,8 +181,8 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
                       renderInput={(params) => <TextField {...params} name="team" label="Team" />}
                       onChange={(e, v) => {
                         if (!v) return
-                        for(constt[i,p] of run.teams.entries()){
-                            if (t._id == t._id) {
+                        for(const [i,t] of run.teams.entries()){
+                            if (t._id == v._id) {
                                 setTeam(v)
                                 setCurrentFlight(i)
                                 return

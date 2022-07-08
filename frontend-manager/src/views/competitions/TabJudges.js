@@ -21,7 +21,7 @@ const TabJudges = ({judges, allJudges, update}) => {
   const removeJudge = async(e) => {
     const id = e.currentTarget.dataset.id
     if (!id) return
-    const name = allJudges.filter(j => j.id == id)[0].name
+    const name = allJudges.filter(j => j._id == id)[0].name
     if (!confirm(`Are you sure you want to remove judge ${name} (${id}) ?`)) return
     update(judges.filter(p => p.id != id))
   }

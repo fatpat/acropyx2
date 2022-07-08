@@ -24,15 +24,12 @@ const TabTeams = ({teams, allTeams, update}) => {
   const removeTeam = async(e) => {
     const id = e.currentTarget.dataset.id
     if (!id) return
-    const name = allTeams.filter(p => p.id == id)[0].name
+    const name = allTeams.filter(p => p._id == id)[0].name
     if (!confirm(`Are you sure you want to remove team ${name} (${id}) ?`)) return
     update(teams.filter(p => p.id != id))
   }
 
   const headCells = [
-    {
-      id: 'id',
-    },
     {
       id: 'name',
     },
