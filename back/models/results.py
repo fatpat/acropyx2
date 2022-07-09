@@ -99,7 +99,7 @@ class CompetitionPilotResults(BaseModel):
 
     async def export(self) -> CompetitionPilotResultsExport:
         try:
-          pilot = await Pilot.get(self.pilot),
+          pilot = await Pilot.get(self.pilot)
         except:
           pilot = None
 
