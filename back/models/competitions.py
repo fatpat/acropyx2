@@ -719,14 +719,14 @@ class Competition(CompetitionNew):
             t = await Trick.get(trick.base_trick)
 
             # the trick MUST be performed in the X first maneuvers of the run
-            if t.first_maneuver > 0 and i <= t.first_maneuver:
+            if t.first_maneuver > 0 and i >= t.first_maneuver:
                 if t.first_maneuver == 1:
                     mark.warnings.append(f"{trick.name} must be the first maneuver")
                 else:
                     mark.warnings.append(f"{trick.name} must be one of the first {t.first_maneuver} maneuvers")
 
             # the trick can't be performed in the X first maneuvers of the run
-            if t.no_first_maneuver > 0 and i > t.no_first_maneuver:
+            if t.no_first_maneuver > 0 and i < t.no_first_maneuver:
                 if t.no_first_maneuver == 1:
                     mark.warnings.append(f"{trick.name} can't be the first maneuver")
                 else:
