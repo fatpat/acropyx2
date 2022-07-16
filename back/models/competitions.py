@@ -872,6 +872,7 @@ class Competition(CompetitionNew):
                             continue
                         for t in f.tricks:
                             if t.base_trick == trick.base_trick and t.uniqueness == trick.uniqueness:
+                                log.info(f"base_trick={trick.base_trick}({t.base_trick}) -- uniqueness={trick.uniqueness} ({t.uniqueness})")
                                 mark.malus += config.malus_repetition
                                 mark.notes.append(f"trick number #{trick_i} ({trick.name}) has already been performed in a previous run. Adding a {config.malus_repetition}% malus.")
                                 broke = True

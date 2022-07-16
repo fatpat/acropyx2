@@ -15,6 +15,7 @@ import AccountGroup from 'mdi-material-ui/AccountGroup'
 import ScriptText from 'mdi-material-ui/ScriptText'
 import ScriptTextOutline from 'mdi-material-ui/ScriptTextOutline'
 import DvrIcon from '@mui/icons-material/Dvr'
+import SettingsIcon from '@mui/icons-material/Settings'
 
 const navigation = () => {
   return [
@@ -55,6 +56,11 @@ const navigation = () => {
       title: 'Competitions',
       icon: DvrIcon,
       path: '/competitions'
+    },
+    {
+      title: 'Utils',
+      icon: SettingsIcon,
+      path: '/utils'
     },
   ]
 }
