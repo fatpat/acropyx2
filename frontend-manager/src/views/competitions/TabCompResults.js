@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
+import Link from '@mui/material/Link'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
@@ -15,6 +16,7 @@ import TableHead from '@mui/material/TableHead'
 import Table from '@mui/material/Table'
 import TableContainer from '@mui/material/TableContainer'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
+import ArticleIcon from '@mui/icons-material/Article'
 
 // ** jquery
 import $ from 'jquery'
@@ -67,6 +69,9 @@ const TabResults = ({ code }) => {
 
   return (
     <CardContent>
+      <Box sx={{display: 'flex',justifyContent: 'right'}}>
+        <Button href={new URL(`/competitions/${code}/csv_results`, process.env.NEXT_PUBLIC_API_URL).toString()} startIcon={<ArticleIcon />}>Download CIVL CSV</Button>
+      </Box>
       <Box sx={{display: 'flex',justifyContent: 'center'}}>
       <Typography variant="h4">
         <EmojiEventsIcon fontSize="large"/>{ results.final ? 'Final' : 'Intermediate' } Overall

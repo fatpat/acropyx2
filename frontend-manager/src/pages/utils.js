@@ -48,7 +48,7 @@ const Utils = () => {
       { err && <p>Error: {err}</p>}
       <h1>Utils</h1>
       <List>
-        <ListItem><Link href={`${process.env.NEXT_PUBLIC_API_URL}utils/backup`}>Download Database Backup</Link></ListItem>
+        <ListItem><Link href={new URL('/utils/backup', process.env.NEXT_PUBLIC_API_URL).toString()}>Download Database Backup</Link></ListItem>
         <ListItem><Link href='#' onClick={cleanupPilots}>Cleanup unused pilots</Link></ListItem>
       </List>
     </Box>

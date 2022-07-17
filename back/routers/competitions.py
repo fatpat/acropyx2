@@ -1,8 +1,10 @@
 import logging
+import os
+from datetime import datetime
 from http import HTTPStatus
-from fastapi import APIRouter, Depends, Body, HTTPException, Request
+from fastapi import APIRouter, Depends, Body, HTTPException, Request, BackgroundTasks
 from typing import List
-from fastapi.responses import Response, HTMLResponse
+from fastapi.responses import Response, HTMLResponse, FileResponse
 
 from core.security import auth
 
@@ -12,6 +14,7 @@ from models.runs import Run, RunExport
 from models.marks import FinalMark, FinalMarkExport
 from models.flights import Flight, FlightNew, FlightExport
 from models.results import RunResults, CompetitionResults, CompetitionResultsExport, RunResultsExport
+from controllers.competitions import CompCtrl
 
 log = logging.getLogger(__name__)
 competitions = APIRouter()
@@ -339,6 +342,20 @@ async def get_all_results(id: str):
     comp = await Competition.get(id)
     res = await comp.results()
     return await res.export()
+
+@competitions.get(
+    "/{id}/csv_results",
+    status_code=200,
+    response_description="Rietrieve the results of the competition",
+    response_class=FileResponse,
+    dependencies=[Depends(auth)],
+)
+async def get_csv_results(id: str, bg_tasks: BackgroundTasks):
+    res = await get_all_results(id)
+    csv_file = CompCtrl.comp_to_csv(res)
+    bg_tasks.add_task(os.remove, csv_file)
+    filename=f"export-{id}-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.csv"
+    return FileResponse(path=csv_file, filename=filename, background=bg_tasks)
 
 @competitions.get(
     "/{id}/results/{i}",
