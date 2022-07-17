@@ -34,7 +34,7 @@ export async function APIRequest(route, props={}) {
 
   var err = null
   if (expected_status > 0 && res.status != expected_status) {
-    err = `wrong status code (received ${res.status} while expecting ${expected_status}`
+    err = `wrong status code (received ${res.status} while expecting ${expected_status})`
     if (body) {
       err += ": " + JSON.stringify(body)
     }

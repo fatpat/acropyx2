@@ -108,6 +108,11 @@ class Pilot(BaseModel):
         return pilots
 
     @staticmethod
+    async def delete(id: int):
+        pilot = await Pilot.get(id)
+        return await collection.delete_one({"_id": id})
+
+    @staticmethod
     def createIndexes():
         collection.create_index('civlid', unique=True)
         collection.create_index('name', unique=True)

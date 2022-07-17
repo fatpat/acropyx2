@@ -12,6 +12,9 @@ from core.database import PyObjectId
 
 from core.config import settings
 from models.pilots import Pilot
+from models.competitions import Competition
+from models.judges import Judge
+from models.teams import Team
 
 log = logging.getLogger(__name__)
 
@@ -184,3 +187,30 @@ class PilotCtrl:
             rank = rank,
         )
         return await pilot.save()
+
+    @staticmethod
+    async def get_all_used_pilots():
+        pilots = []
+
+        # retrieve pilots from each competition
+        for competition in await Competition.getall():
+            pilots += competition.pilots
+
+        # also add pilots in each team
+        for team  in await Team.getall():
+            pilots += team.pilots
+
+        # consider judges with a civlid as a valuable pilot
+        for judge in await Judge.getall():
+            if judge.civlid is not None:
+                pilots.append(judge.civlid)
+
+        # unique
+        return list(set(pilots))
+
+    @staticmethod
+    async def get_all_unused_pilots():
+        used_pilots = await PilotCtrl.get_all_used_pilots()
+        all_pilots = await Pilot.getall()
+
+        return [p.civlid for p in all_pilots if p.civlid not in used_pilots]
