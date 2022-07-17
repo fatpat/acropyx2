@@ -66,10 +66,11 @@ class CompetitionPublicExport(BaseModel):
     location: str
     published: bool
     type: CompetitionType
-    pilots: List[Pilot] 
-    teams: List[TeamExport]
-    judges: List[Judge]
     state: CompetitionState
+    number_of_pilots: int
+    number_of_teams: int
+    number_of_judges: int
+    number_of_runs: int
 
     class Config:
         json_encoders = {ObjectId: str}
@@ -233,29 +234,35 @@ class Competition(CompetitionNew):
         )
 
     async def export_public(self) -> CompetitionPublicExport:
-        comp = await self.export()
+        if not self.published:
+            return None
+
         return CompetitionPublicExport(
-            _id = str(comp.id),
-            name = comp.name,
-            code = comp.code,
-            start_date = comp.start_date,
-            end_date = comp.end_date,
-            location = comp.location,
-            published = comp.published,
-            type = comp.type,
-            pilots = comp.pilots,
-            teams = comp.teams,
-            judges = comp.judges,
-            state = comp.state
+            _id = str(self.id),
+            name = self.name,
+            code = self.code,
+            start_date = self.start_date,
+            end_date = self.end_date,
+            location = self.location,
+            published = self.published,
+            type = self.type,
+            number_of_pilots = len(self.pilots),
+            number_of_teams = len(self.teams),
+            number_of_judges = len(self.judges),
+            number_of_runs = len(self.runs),
+            state = self.state
         )
 
     async def export_public_with_results(self) -> CompetitionPublicExportWithResults:
+        if not self.published:
+            raise HTTPException(404, f"Competition {self.code} not published")
+
         results = await self.results()
         for result in results.runs_results:
             for r in result.results:
                 r.marks = []
 
-        comp = await self.export_public()
+        comp = await self.export()
         return CompetitionPublicExportWithResults(
             _id = str(comp.id),
             name = comp.name,

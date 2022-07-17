@@ -105,7 +105,8 @@ async def list():
     comps = []
     for comp in await Competition.getall():
         comp = await comp.export_public()
-        comps.append(comp)
+        if comp is not None:
+            comps.append(comp)
     return comps
 
 #
