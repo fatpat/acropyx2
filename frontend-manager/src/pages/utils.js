@@ -40,6 +40,33 @@ const Utils = () => {
     return false
   }
 
+  const downloadBackup = async (e) => {
+    setLoading(true)
+
+    const [err, data, headers] = await APIRequest(`/utils/backup`)
+
+    if (err) {
+      error(err)
+      setLoading(false)
+      return false
+    }
+    var filename = headers.get('content-disposition')
+    if (filename) {
+        var arr = filename.match(/"(.*)"/)
+        filename = arr[1]
+    }
+
+    success("Download successful")
+    setLoading(true)
+    const a = document.querySelector('#downloadbackup')
+    a.href = window.URL.createObjectURL(new Blob([data]))
+    if (filename) {
+        a.setAttribute('download', filename)
+    }
+    a.click()
+    return false
+  }
+
   useEffect(() => {
   }, [])
 
@@ -48,7 +75,7 @@ const Utils = () => {
       { err && <p>Error: {err}</p>}
       <h1>Utils</h1>
       <List>
-        <ListItem><Link href={new URL('/utils/backup', process.env.NEXT_PUBLIC_API_URL).toString()}>Download Database Backup</Link></ListItem>
+        <ListItem><Link href='#' onClick={downloadBackup}>Download Database Backup</Link><Link id="downloadbackup" /></ListItem>
         <ListItem><Link href='#' onClick={cleanupPilots}>Cleanup unused pilots</Link></ListItem>
       </List>
     </Box>

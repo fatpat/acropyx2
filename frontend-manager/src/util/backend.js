@@ -24,8 +24,12 @@ export async function APIRequest(route, props={}) {
 
   var body = null
   const contentType = res.headers.get('content-type')
-  if (contentType && contentType.includes('application/json')) {
-    body = await res.json()
+  if (contentType) {
+    if (contentType.includes('application/json')) {
+        body = await res.json()
+    } else if (contentType.includes('application/x-tar')) {
+        body = await res.blob()
+    }
   }
 
   if (expect_json && body == null) {
