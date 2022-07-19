@@ -120,7 +120,7 @@ const CompetitionsPage = () => {
     info(`${d.length} competitions filtered over ${fullData.length}`)
   }
 
-  const headCells = [
+  var headCells = [
     {
       id: 'name',
       type: 'LINK',
@@ -139,8 +139,7 @@ const CompetitionsPage = () => {
       id: 'location',
     },
     {
-      id: 'runs',
-      rewrite: (v, comp) => `${v.length} runs`,
+      id: 'number_of_runs',
     },
     {
       id: 'code',

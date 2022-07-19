@@ -8,7 +8,7 @@ from fastapi.responses import Response, HTMLResponse, FileResponse
 
 from core.security import auth
 
-from models.competitions import Competition, CompetitionExport, CompetitionNew, CompetitionState
+from models.competitions import Competition, CompetitionExport, CompetitionNew, CompetitionState, CompetitionPublicExport
 from models.competition_configs import CompetitionConfig
 from models.runs import Run, RunExport
 from models.marks import FinalMark, FinalMarkExport
@@ -25,14 +25,15 @@ competitions = APIRouter()
 @competitions.get(
     "/",
     response_description="List all competitions",
-    response_model=List[CompetitionExport],
+    response_model=List[CompetitionPublicExport],
     dependencies=[Depends(auth)]
 )
 async def list():
     comps = []
     for comp in await Competition.getall():
-        comp = await comp.export()
-        comps.append(comp)
+        comp = await comp.export_public()
+        if comp is not None:
+            comps.append(comp)
     return comps
 
 #
