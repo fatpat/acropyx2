@@ -15,6 +15,7 @@ from models.marks import FinalMark, FinalMarkExport
 from models.flights import Flight, FlightNew, FlightExport
 from models.results import RunResults, CompetitionResults, CompetitionResultsExport, RunResultsExport
 from controllers.competitions import CompCtrl
+from controllers.utils import UtilsCtrl
 
 log = logging.getLogger(__name__)
 competitions = APIRouter()
@@ -47,7 +48,7 @@ async def list():
 )
 async def get_by_id(id: str, deleted: bool = False):
     comp = await Competition.get(id, deleted)
-    return await comp.export()
+    return await comp.export(cache=await UtilsCtrl.get_cache())
 
 #
 # Create a new Competition
@@ -61,7 +62,7 @@ async def get_by_id(id: str, deleted: bool = False):
 )
 async def create(competition: CompetitionNew = Body(...)):
     comp = await competition.create()
-    return await comp.export()
+    return await comp.export(cache=await UtilsCtrl.get_cache())
 
 #
 # Update a Competition
@@ -201,7 +202,7 @@ async def close(id: str):
 async def new_run(id: str, pilots_to_qualify: int = 0):
     comp = await Competition.get(id)
     run = await comp.new_run(pilots_to_qualify)
-    return await run.export()
+    return await run.export(cache=await UtilsCtrl.get_cache())
 
 @competitions.get(
     "/{cid}/runs/{rid}",
@@ -212,9 +213,7 @@ async def new_run(id: str, pilots_to_qualify: int = 0):
 async def get_run(cid: str, rid: int):
     comp = await Competition.get(cid)
     run = await comp.run_get(rid)
-    log.debug(type(run))
-    log.debug(run)
-    return await run.export()
+    return await run.export(cache=await UtilsCtrl.get_cache())
 
 #
 # Update Run Pilot list
@@ -330,19 +329,19 @@ async def flight_save(id: str, i: int, pilot_team_id, save: bool, published:bool
     log.debug(f"flight_save {pilot_team_id}")
     comp = await Competition.get(id)
     mark = await comp.flight_save(run_i=i, id=pilot_team_id, flight=flight, save=save, published=published)
-    return await mark.export()
+    return await mark.export(cache=await UtilsCtrl.get_cache())
 
 @competitions.get(
     "/{id}/results",
     status_code=200,
-    response_description="Rietrieve the results of the competition",
+    response_description="Retrieve the results of the competition",
     response_model=CompetitionResultsExport,
     dependencies=[Depends(auth)],
 )
 async def get_all_results(id: str):
     comp = await Competition.get(id)
     res = await comp.results()
-    return await res.export()
+    return await res.export(cache=await UtilsCtrl.get_cache())
 
 @competitions.get(
     "/{id}/csv_results",
@@ -368,4 +367,4 @@ async def get_csv_results(id: str, bg_tasks: BackgroundTasks):
 async def run_get_results(id: str, i: int, published_only: bool = True):
     comp = await Competition.get(id)
     res = await comp.run_results(run_i=i, published_only=published_only)
-    return await res.export()
+    return await res.export(cache=await UtilsCtrl.get_cache())

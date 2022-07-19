@@ -37,10 +37,10 @@ class RunResults(BaseModel):
             }
         }
 
-    async def export(self) -> FlightExport:
+    async def export(self, cache:dict = {}) -> FlightExport:
         results = []
         for result in self.results:
-            results.append(await result.export())
+            results.append(await result.export(cache=cache))
 
         return RunResultsExport(
             final = self.final,
@@ -97,15 +97,15 @@ class CompetitionPilotResults(BaseModel):
             }
         }
 
-    async def export(self) -> CompetitionPilotResultsExport:
+    async def export(self, cache:dict = {}) -> CompetitionPilotResultsExport:
         try:
-          pilot = await Pilot.get(self.pilot)
+          pilot = await Pilot.get(self.pilot, cache=cache)
         except:
           pilot = None
 
         try:
-          team = await Team.get(self.team)
-          team = await team.export()
+          team = await Team.get(self.team, cache=cache)
+          team = await team.export(cache=cache)
         except Exception as e:
           team = None
 
@@ -140,14 +140,14 @@ class CompetitionResults(BaseModel):
             }
         }
 
-    async def export(self) -> CompetitionResultsExport:
+    async def export(self, cache:dict = {}) -> CompetitionResultsExport:
         overall_results = []
         for r in self.overall_results:
-            overall_results.append(await r.export())
+            overall_results.append(await r.export(cache=cache))
 
         runs_results = []
         for r in self.runs_results:
-            runs_results.append(await r.export())
+            runs_results.append(await r.export(cache=cache))
 
         return CompetitionResultsExport(
             final = self.final,

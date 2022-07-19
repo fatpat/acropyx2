@@ -1,10 +1,12 @@
 import logging
 from http import HTTPStatus
 from fastapi import APIRouter, Depends, Body, HTTPException
-from core.security import auth
-from models.teams import Team, TeamExport
 from typing import List
 from fastapi.responses import Response
+
+from core.security import auth
+from models.teams import Team, TeamExport
+from controllers.utils import UtilsCtrl
 
 log = logging.getLogger(__name__)
 teams = APIRouter()
@@ -20,8 +22,9 @@ teams = APIRouter()
 )
 async def list(deleted: bool = False):
     teams = []
+    cache = await UtilsCtrl.get_cache()
     for team in await Team.getall(deleted):
-        teams.append(await team.export())
+        teams.append(await team.export(cache=cache))
     return teams
 
 #
@@ -35,7 +38,7 @@ async def list(deleted: bool = False):
 )
 async def get(id: str, deleted: bool = False):
     team = await Team.get(id, deleted)
-    return await team.export()
+    return await team.export(cache=await UtilsCtrl.get_cache())
 
 #
 # Create a new Team
@@ -49,7 +52,7 @@ async def get(id: str, deleted: bool = False):
 )
 async def create(team: Team = Body(...)):
     team = await team.create()
-    return await team.export()
+    return await team.export(cache=await UtilsCtrl.get_cache())
 
 #
 # Update an existing Team

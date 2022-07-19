@@ -49,20 +49,20 @@ class Flight(BaseModel):
             }
         }
 
-    async def export(self) -> FlightExport:
+    async def export(self, cache:dict = {}) -> FlightExport:
 
         marks = []
         for mark in self.marks:
-            marks.append(await mark.export())
+            marks.append(await mark.export(cache=cache))
 
         try:
-            pilot = await Pilot.get(self.pilot)
+            pilot = await Pilot.get(self.pilot, cache=cache)
         except:
             pilot = None
 
         try:
-            team = await Team.get(self.team)
-            team = await team.export()
+            team = await Team.get(self.team, cache=cache)
+            team = await team.export(cache=cache)
         except:
             team = None
 
@@ -72,7 +72,7 @@ class Flight(BaseModel):
             tricks = self.tricks,
             marks = marks,
             did_not_start = self.did_not_start,
-            final_marks = await self.final_marks.export(),
+            final_marks = await self.final_marks.export(cache=cache),
             published = self.published,
             warnings = self.warnings,
         )

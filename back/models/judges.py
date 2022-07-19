@@ -84,7 +84,17 @@ class Judge(BaseModel):
         log.debug('index created on "name,deleted"')
 
     @staticmethod
-    async def get(id, deleted: bool = False):
+    async def get(id, deleted: bool = False, cache:dict = {}):
+        if id is None:
+            raise HTTPException(404, f"Judge not found")
+
+        if not deleted and 'judges' in cache:
+            try:
+                return [j for j in cache['judges'] if str(j.id) == id][0]
+            except:
+                pass
+
+        log.debug(f"fetching judge {id} from DB")
         if deleted:
             search = {"_id": id}
         else:

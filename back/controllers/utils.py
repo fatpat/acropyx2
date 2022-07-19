@@ -16,7 +16,9 @@ import asyncio
 from core.database import PyObjectId, db
 from core.config import settings
 from models.pilots import Pilot
+from models.teams import Team
 from models.judges import Judge
+from models.tricks import Trick
 from models.competitions import Competition
 from controllers.pilots import PilotCtrl
 
@@ -45,3 +47,12 @@ class UtilsCtrl:
         for pilot in await PilotCtrl.get_all_unused_pilots():
             log.info(f"deleting pilot {pilot}")
             await Pilot.delete(pilot)
+
+    @staticmethod
+    async def get_cache() -> dict:
+        return{
+            "pilots": await Pilot.getall(),
+            "teams": await Team.getall(),
+            "judges": await Judge.getall(),
+            "tricks": await Trick.getall()
+        }

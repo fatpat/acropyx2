@@ -60,28 +60,28 @@ class Run(BaseModel):
             }
         }
 
-    async def export(self) -> RunExport:
+    async def export(self, cache:dict = {}) -> RunExport:
 
         pilots = []
         for pilot in self.pilots:
-            pilots.append(await Pilot.get(pilot))
+            pilots.append(await Pilot.get(pilot, cache=cache))
 
         teams = []
         for team in self.teams:
-            team = await Team.get(team)
-            teams.append(await team.export())
+            team = await Team.get(team, cache=cache)
+            teams.append(await team.export(cache=cache))
 
         judges = []
         for judge in self.judges:
-            judges.append(await Judge.get(judge))
+            judges.append(await Judge.get(judge, cache=cache))
 
         repeatable_tricks = []
         for trick in self.repeatable_tricks:
-            repeatable_tricks.append(await Trick.get(trick))
+            repeatable_tricks.append(await Trick.get(trick, cache=cache))
 
         flights = []
         for flight in self.flights:
-            flights.append(await flight.export())
+            flights.append(await flight.export(cache=cache))
 
         return RunExport(
             state=self.state,

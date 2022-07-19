@@ -162,7 +162,17 @@ class Trick(BaseModel):
         log.debug('index created on "name,deleted" and "acronym,deleted"')
 
     @staticmethod
-    async def get(id, deleted: bool = False):
+    async def get(id, deleted: bool = False, cache:dict = {}):
+        if id is None:
+            raise HTTPException(404, f"Trick not found")
+
+        if not deleted and 'tricks' in cache:
+            try:
+                return [t for t in cache['tricks'] if str(t.id) == id][0]
+            except:
+                pass
+
+        log.debug(f"fetching trick {id} from DB")
         if deleted:
             search = {"$or": [{"_id": id}, {"name": id}]}
         else:

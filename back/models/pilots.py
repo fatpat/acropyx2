@@ -81,11 +81,15 @@ class Pilot(BaseModel):
         return self
 
     @staticmethod
-    async def get(id: int):
-        pilot = await collection.find_one({ "$or": [
-            {"_id": id},
-            {"name": id},
-        ]})
+    async def get(id: int, cache:dict = {}):
+        if 'pilots' in cache:
+            try:
+                return [p for p in cache['pilots'] if p.id == id][0]
+            except:
+                pass
+
+        log.debug(f"fetching pilot {id} from DB")
+        pilot = await collection.find_one({"_id": id})
 
         if pilot is None:
             raise HTTPException(status_code=404, detail=f"Pilot {id} not found")

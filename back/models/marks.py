@@ -46,10 +46,10 @@ class JudgeMark(BaseModel):
             }
         }
 
-    async def export(self) -> JudgeMarkExport:
+    async def export(self, cache:dict = {}) -> JudgeMarkExport:
         judge = None
         if self.judge != "":
-            judge = await Judge.get(self.judge)
+            judge = await Judge.get(self.judge, cache=cache)
 
         return JudgeMarkExport(
             judge = judge,
@@ -124,9 +124,9 @@ class FinalMark(BaseModel):
             }
         }
 
-    async def export(self) -> FinalMarkExport:
+    async def export(self, cache:dict = {}) -> FinalMarkExport:
         return FinalMarkExport(
-            judges_mark = await self.judges_mark.export(),
+            judges_mark = await self.judges_mark.export(cache=cache),
             technicity = self.technicity,
             bonus_percentage = self.bonus_percentage,
             technical = self.technical,

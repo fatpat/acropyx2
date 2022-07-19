@@ -192,28 +192,30 @@ class Competition(CompetitionNew):
         if res.modified_count != 1:
             raise HTTPException(400, f"Error while saving Competition {self.id}, 1 item should have been saved, got {res.modified_count}")
 
-    async def export(self) -> CompetitionExport:
+    async def export(self, cache:dict={}) -> CompetitionExport:
 
         pilots = []
-        for pilot in self.pilots:
-            pilots.append(await Pilot.get(pilot))
+        if self.type == CompetitionType.solo:
+            for pilot in self.pilots:
+                pilots.append(await Pilot.get(pilot, cache=cache))
 
         teams = []
-        for team in self.teams:
-            team = await Team.get(team)
-            teams.append(await team.export())
+        if self.type == CompetitionType.synchro:
+            for team in self.teams:
+                team = await Team.get(team, cache=cache)
+                teams.append(await team.export(cache=cache))
 
         judges = []
         for judge in self.judges:
-            judges.append(await Judge.get(judge))
+            judges.append(await Judge.get(judge, cache=cache))
 
         repeatable_tricks = []
         for trick in self.repeatable_tricks:
-            repeatable_tricks.append(await Trick.get(trick))
+            repeatable_tricks.append(await Trick.get(trick, cache=cache))
 
         runs = []
         for run in self.runs:
-            runs.append(await run.export())
+            runs.append(await run.export(cache=cache))
 
         return CompetitionExport(
             _id = str(self.id),
@@ -253,7 +255,7 @@ class Competition(CompetitionNew):
             state = self.state
         )
 
-    async def export_public_with_results(self) -> CompetitionPublicExportWithResults:
+    async def export_public_with_results(self, cache:dict = {}) -> CompetitionPublicExportWithResults:
         if not self.published:
             raise HTTPException(404, f"Competition {self.code} not published")
 
@@ -276,7 +278,7 @@ class Competition(CompetitionNew):
             teams = comp.teams,
             judges = comp.judges,
             state = comp.state,
-            results = await results.export()
+            results = await results.export(cache=cache)
         )
 
 #    async def sort_pilots(self):

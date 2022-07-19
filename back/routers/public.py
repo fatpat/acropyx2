@@ -10,6 +10,7 @@ from models.pilots import Pilot
 from models.judges import Judge
 from models.teams import Team, TeamExport
 from core.config import settings
+from controllers.utils import UtilsCtrl
 
 log = logging.getLogger(__name__)
 public = APIRouter()
@@ -49,8 +50,9 @@ async def get(civlid: int):
 @cache(expire=settings.CACHE_EXPIRES)
 async def list():
     teams = []
+    cache = await UtilsCtrl.get_cache()
     for team in await Team.getall(False):
-        teams.append(await team.export())
+        teams.append(await team.export(cache=cache))
     return teams
 
 #
@@ -64,7 +66,7 @@ async def list():
 @cache(expire=settings.CACHE_EXPIRES)
 async def get(id: str):
     team = await Team.get(id, False)
-    return await team.export()
+    return await team.export(cache=await UtilsCtrl.get_cache())
 
 #
 # Get all judges
@@ -77,8 +79,6 @@ async def get(id: str):
 @cache(expire=settings.CACHE_EXPIRES)
 async def list():
     return await Judge.getall(False)
-    log.debug(team)
-    return await team.export()
 
 #
 # Get one judge
@@ -120,4 +120,4 @@ async def list():
 @cache(expire=settings.CACHE_EXPIRES)
 async def get_by_id(id: str):
     comp = await Competition.get(id)
-    return await comp.export_public_with_results()
+    return await comp.export_public_with_results(cache=await UtilsCtrl.get_cache())

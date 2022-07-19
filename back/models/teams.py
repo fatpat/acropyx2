@@ -74,10 +74,10 @@ class Team(BaseModel):
         if res.modified_count != 1:
             raise HTTPException(400, f"Error while saving team, 1 item should have been saved, got {res.modified_count}")
 
-    async def export(self) -> TeamExport:
+    async def export(self, cache:dict = {}) -> TeamExport:
         pilots = []
         for pilot in self.pilots:
-            pilots.append(await Pilot.get(pilot))
+            pilots.append(await Pilot.get(pilot, cache=cache))
 
         return TeamExport(
                 _id=str(self.id),
@@ -91,7 +91,17 @@ class Team(BaseModel):
         log.debug('index created on "name,deleted"')
 
     @staticmethod
-    async def get(id, deleted: bool = False):
+    async def get(id, deleted: bool = False, cache:dict = {}):
+        if id is None or id == '':
+            raise HTTPException(404, f"Team not found")
+
+        if not deleted and 'teams' in cache:
+            try:
+                return [t for t in cache['teams'] if str(t.id) == id][0]
+            except:
+                pass
+
+        log.debug(f"fetching team {id} from DB")
         if deleted:
             search = {"_id": id}
         else:
