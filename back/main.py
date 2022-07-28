@@ -41,6 +41,8 @@ origins = [
     'https://fatpat.github.io',
     'https://acropyx.lukedeweert.nl',
     'https://acroworldtour.com',
+    'http://109.37.130.22',
+    'https://109.37.130.22',
 ]
 
 app.add_middleware(
