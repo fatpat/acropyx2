@@ -348,7 +348,6 @@ async def get_all_results(id: str):
     status_code=200,
     response_description="Rietrieve the results of the competition",
     response_class=FileResponse,
-    dependencies=[Depends(auth)],
 )
 async def get_csv_results(id: str, bg_tasks: BackgroundTasks):
     res = await get_all_results(id)
