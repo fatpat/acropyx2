@@ -7,7 +7,6 @@ log = logging.getLogger(__name__)
 
 def data_to_csv(data, csv):
     data = list(map(lambda x: f"\"{x}\"" if isinstance(x, str) else str(x), data))
-    log.debug(data)
     csv.write(",".join(data).encode())
     csv.write("\n".encode())
 
