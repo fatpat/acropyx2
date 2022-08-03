@@ -354,7 +354,7 @@ async def get_csv_results(id: str, bg_tasks: BackgroundTasks):
     res = await get_all_results(id)
     csv_file = CompCtrl.comp_to_csv(res)
     bg_tasks.add_task(os.remove, csv_file)
-    filename=f"export-{id}-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.csv"
+    filename=f"{id}-results-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.csv"
     return FileResponse(path=csv_file, filename=filename, background=bg_tasks)
 
 @competitions.get(
