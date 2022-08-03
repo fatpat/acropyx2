@@ -22,8 +22,8 @@ class CompCtrl:
             ret = csv.name
             data_to_csv(["CIVL ID", "Name", "Nationality", "Score"], csv)
             for res in comp.overall_results:
-                data = []
                 if res.pilot is not None: # solo comp
+                    data = []
                     data.append(res.pilot.civlid)
                     data.append(res.pilot.name)
                     data.append(res.pilot.country.upper())
@@ -32,6 +32,7 @@ class CompCtrl:
 
                 if res.team is not None: # synchro comp
                     for pilot in res.team.pilots:
+                        data = []
                         data.append(pilot.civlid)
                         data.append(pilot.name)
                         data.append(pilot.country.upper())
