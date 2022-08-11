@@ -350,8 +350,10 @@ async def get_all_results(id: str):
     response_class=FileResponse,
 )
 async def get_csv_results(id: str, bg_tasks: BackgroundTasks):
-    res = await get_all_results(id)
-    csv_file = CompCtrl.comp_to_csv(res)
+    comp = await Competition.get(id)
+    res = await comp.results()
+    res = await res.export(cache=await UtilsCtrl.get_cache())
+    csv_file = CompCtrl.comp_to_csv(res, comp.type)
     bg_tasks.add_task(os.remove, csv_file)
     filename=f"{id}-results-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.csv"
     return FileResponse(path=csv_file, filename=filename, background=bg_tasks)
