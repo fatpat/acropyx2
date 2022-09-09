@@ -5,7 +5,8 @@ import React, { useState, useEffect } from 'react';
 import { useNotifications } from 'src/util/notifications'
 
 export async function APIRequest(route, props={}) {
-  var expected_status = props.expected_status ?? 200
+  var expected_status = props.expected_status ?? [200]
+  if (!Array.isArray(expected_status)) expected_status = [expected_status]
   var expect_json = props.expect_json ?? false
 
   if (props.headers == null) {
@@ -37,14 +38,15 @@ export async function APIRequest(route, props={}) {
   }
 
   var err = null
-  if (expected_status > 0 && res.status != expected_status) {
+  console.log("expected status", expected_status)
+  if (expected_status > 0 && !expected_status.includes(res.status)) {
     err = `wrong status code (received ${res.status} while expecting ${expected_status})`
     if (body) {
       err += ": " + JSON.stringify(body)
     }
   }
 
-  return [err, body, res.headers]
+  return [err, body, res.headers, res.status]
 }
 
 
