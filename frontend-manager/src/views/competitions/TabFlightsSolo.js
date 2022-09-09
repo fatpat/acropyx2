@@ -35,7 +35,7 @@ import { APIRequest, useUniqueTricks } from 'src/util/backend'
 const SelectMark = (props) => {
   return (
     <NativeSelect onChange={e => {props.onChange(e)}}>
-      { Array.from({length: 21}, (v, k) => k*0.5).map(i => (<option value={i}>{i}</option>))}
+      { Array.from({length: 21}, (v, k) => k*0.5).map(i => (<option value={i} selected={props.value==i}>{i}</option>))}
     </NativeSelect>
   )
 }
@@ -62,18 +62,43 @@ const TabFlights = ({ comp, run, rid }) => {
   // ** refs
   const nameRef = useRef()
 
-  const prevPilot = () => {
-    if (currentFlight == 0) return
-    currentFlight -= 1
-    setPilot(run.pilots[currentFlight])
+  const loadPilot = async(i) => {
+    if (i<0 || i>=run.pilots.length) return
+    currentFlight = i
+    pilot = run.pilots[currentFlight]
+
+    const [err, retData, headers, status] = await APIRequest(`/competitions/${comp.code}/runs/${rid}/flights/${pilot.civlid}`, {
+      expected_status: [200, 404]
+    })
+    if (err) {
+        console.log(`error while fetching flight: ${err}`)
+        return
+    }
+    if (status == 404) {
+      data = {}
+      setResult({
+        judges_mark:{}
+      })
+      setResultsOK(false)
+    } else {
+      data = retData
+      setData(data)
+      result = retData.final_marks
+      setResult(result)
+      setResultsOK(true)
+    }
+    console.log("retrieved Data", data)
+
+    setPilot(pilot)
     setCurrentFlight(currentFlight)
   }
 
+  const prevPilot = () => {
+    loadPilot(currentFlight-1)
+  }
+
   const nextPilot = () => {
-    if (currentFlight+1 >= run.pilots.length)  return
-    currentFlight += 1
-    setPilot(run.pilots[currentFlight])
-    setCurrentFlight(currentFlight)
+    loadPilot(currentFlight+1)
   }
 
   const simulateScore = async(data) => {
@@ -99,7 +124,7 @@ const TabFlights = ({ comp, run, rid }) => {
         setResultsOK(false)
         return
     }
-    console.log("simulated score:", retData) 
+    console.log("simulated score:", retData)
     setResult(retData)
     setResultsOK(true)
   }
@@ -150,9 +175,12 @@ const TabFlights = ({ comp, run, rid }) => {
   }
 
   useEffect(() => {
+    loadPilot(0)
+/*
     currentFlight = 0
     setPilot(run.pilots.sort((a,b) => b.rank-a.rank)[currentFlight])
     setCurrentFlight(currentFlight)
+*/
   }, [])
 
   return (
@@ -198,7 +226,10 @@ const TabFlights = ({ comp, run, rid }) => {
             <Grid xs={12}>
               <Typography variant="h5">Maneuvers</Typography>
             </Grid>
-{ [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map(i => (
+{ [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(i =>{
+            var trick = null
+            if (data && data.tricks && data.tricks[i]) trick = data.tricks[i]
+            return(
             <Grid xs={12} key={i}>
                     <Autocomplete
                       id="autocomplete-trick-{i}"
@@ -206,6 +237,7 @@ const TabFlights = ({ comp, run, rid }) => {
                       options={uniqueTricks}
                       getOptionLabel={(p) => `${p.name} (${p.acronym}) (${p.technical_coefficient})`}
                       renderInput={(params) => <TextField {...params} name="trick" />}
+                      value={trick}
                       onChange={(e, v) => {
                           data.tricks[i] = v
                           simulateScore(data)
@@ -213,7 +245,7 @@ const TabFlights = ({ comp, run, rid }) => {
                       }}
                     />
             </Grid>
-))}
+)})}
         </Grid>
         {/* 2nd column */}
         <Grid container xs={6}>
@@ -242,19 +274,31 @@ const TabFlights = ({ comp, run, rid }) => {
     </TableHead>
             <TableBody>
 { run.judges.map((j) => {
+    var technical = 0
+    var choreography = 0
+    var landing = 0
+    for (const m in data.marks) {
+      m = data.marks[m]
+      if (m.judge == j._id) {
+        technical = m.technical
+        choreography = m.choreography
+        landing = m.landing
+        break
+      }
+    }
     return (
               <TableRow>
                 <TableCell>
                   <Typography>{ j.name }</Typography>
                 </TableCell>
                 <TableCell>
-                  <SelectMark onChange={e => {setMark('technical', j, e.target.value)}}/>
+                  <SelectMark onChange={e => {setMark('technical', j, e.target.value)}} value={technical}/>
                 </TableCell>
                 <TableCell>
-                  <SelectMark onChange={e => {setMark('choreography', j, e.target.value)}}/>
+                  <SelectMark onChange={e => {setMark('choreography', j, e.target.value)}} value={choreography}/>
                 </TableCell>
                 <TableCell>
-                  <SelectMark onChange={e => {setMark('landing', j, e.target.value)}}/>
+                  <SelectMark onChange={e => {setMark('landing', j, e.target.value)}} value={landing}/>
                 </TableCell>
             </TableRow>
 )})}
