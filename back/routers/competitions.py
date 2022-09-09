@@ -319,6 +319,17 @@ async def run_reopen(id: str, i: int):
     comp = await Competition.get(id)
     await comp.run_reopen(i)
 
+@competitions.get(
+    "/{id}/runs/{i}/flights/{pilot_team_id}",
+    response_description="retrieve a specific flight from a pilot",
+    response_model=Flight,
+    dependencies=[Depends(auth)],
+)
+async def flight_get(id: str, i: int, pilot_team_id: int):
+    log.debug(f"flight_get{id} {i}  {pilot_team_id}")
+    comp = await Competition.get(id)
+    return await comp.flight_get(run_i= i, pilot_or_team=pilot_team_id)
+
 @competitions.post(
     "/{id}/runs/{i}/flights/{pilot_team_id}/new",
     response_description="Simulate a run and get the detail score",
@@ -326,7 +337,6 @@ async def run_reopen(id: str, i: int):
     dependencies=[Depends(auth)],
 )
 async def flight_save(id: str, i: int, pilot_team_id, save: bool, published:bool = False, flight: FlightNew = Body(...)):
-    log.debug(f"flight_save {pilot_team_id}")
     comp = await Competition.get(id)
     mark = await comp.flight_save(run_i=i, id=pilot_team_id, flight=flight, save=save, published=published)
     return await mark.export(cache=await UtilsCtrl.get_cache())

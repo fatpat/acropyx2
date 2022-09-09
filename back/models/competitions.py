@@ -507,6 +507,27 @@ class Competition(CompetitionNew):
             final = (run.state == RunState.closed) and all_published
         )
 
+    async def flight_get(self, run_i: int, pilot_or_team) -> Flight:
+        run = await self.run_get(run_i)
+
+        if self.type == CompetitionType.solo:
+            if int(pilot_or_team) not in run.pilots:
+                raise HTTPException(400, f"Pilot #{id} does not participate in the run number #{run_i} of the comp ({self.name})")
+            if int(pilot_or_team) not in self.pilots:
+                raise HTTPException(400, f"Pilot #{id} does not participate in this comp ({self.name})")
+
+        if self.type == CompetitionType.synchro:
+            if id not in run.teams:
+                raise HTTPException(400, f"Team #{id} does not participate in the run number #{run_i} of the comp ({self.name})")
+            if id not in self.teams:
+                raise HTTPException(400, f"Team #{id} does not participate in this comp ({self.name})")
+
+        for i, f in enumerate(self.runs[run_i].flights):
+            if (self.type == CompetitionType.solo and f.pilot == int(pilot_or_team)) or (self.type == CompetitionType.synchro and f.team == pilot_or_team):
+                flight = self.runs[run_i].flights[i]
+                return flight
+
+        raise HTTPException(404, "Flight not found")
 
     async def flight_convert(self, id, flight: FlightNew) -> Flight:
         tricks = []
