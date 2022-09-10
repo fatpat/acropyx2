@@ -145,7 +145,7 @@ const TabFlights = ({ comp, run, rid }) => {
     simulateScore(data)
   }
 
-  const saveResults = async(publish) => {
+  const saveResults = async(publish, next) => {
 
     const body = {
       tricks: data.tricks.filter(t => t!=null).map(t => t.name),
@@ -166,6 +166,7 @@ const TabFlights = ({ comp, run, rid }) => {
     }
 
     success(`${pilot.name}'s flights saved with a ${retData.score} score`)
+    if (next != 0) loadPilot(currentFlight + next)
   }
 
   const didNotStart = async(e) => {
@@ -203,8 +204,7 @@ const TabFlights = ({ comp, run, rid }) => {
                         if (!v) return
                         for(const [i,p] of run.pilots.entries()){
                             if (p.civlid == v.civlid) {
-                                setPilot(v)
-                                setCurrentFlight(i)
+                                loadPilot(i)
                                 return
                             }
                         }
@@ -219,6 +219,7 @@ const TabFlights = ({ comp, run, rid }) => {
       </Grid>
 }
       <Grid container spacing={2}>
+        &nbsp;
       </Grid>
       <Grid container spacing={2}>
         {/* 1st column / maneuvers*/}
@@ -362,20 +363,17 @@ const TabFlights = ({ comp, run, rid }) => {
           </Grid>
           {/* actions */}
           <Grid container xs={12}>
-              <Grid item xs={3}>
-                <Button variant="contained" disabled={!resultsOK} onClick={e => saveResults(false)}>Save Results</Button>
+              <Grid item xs={4}>
+                <Button variant="contained" disabled={!resultsOK} onClick={e => saveResults(false, 0)}>Save</Button>
+                <Button variant="contained" disabled={!resultsOK} onClick={e => saveResults(false, 1)}>Save & Next</Button>
               </Grid>
-              <Grid item xs={3}>
-                <Button variant="contained" disabled={!resultsOK} onClick={e => saveResults(true)}>Save & Publish Results</Button>
+              <Grid item xs={4}>
+                <Button variant="contained" disabled={!resultsOK} onClick={e => saveResults(true, 0)}>Save & Publish</Button>
+                <Button variant="contained" disabled={!resultsOK} onClick={e => saveResults(true, 1)}>Save & Publish & Next</Button>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={4}>
                 <Button onClick={didNotStart}>Did not start</Button>
               </Grid>
-{/*
-              <Grid item xs={6}>
-                <Button disabled={!resultsOK}>Publish Results + next Run</Button>
-              </Grid>
-*/}
           </Grid>
         </Grid>
       </Grid>

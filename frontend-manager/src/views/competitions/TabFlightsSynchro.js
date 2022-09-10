@@ -34,7 +34,7 @@ const SelectMark = (props) => {
   return (
     <NativeSelect onChange={e => {props.onChange(e)}}>
       <option value="">-</option>
-      { Array.from({length: 21}, (v, k) => k*0.5).map(i => (<option value={i}>{i}</option>))}
+      { Array.from({length: 21}, (v, k) => k*0.5).map(i => (<option value={i} selected={props.value==i}>{i}</option>))}
     </NativeSelect>
   )
 }
@@ -61,19 +61,44 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
   // ** refs
   const nameRef = useRef()
 
-  const prevTeam = () => {
-    if (currentFlight == 0) return
-    currentFlight -= 1
-    setTeam(run.teams[currentFlight])
+  const loadTeam = async(i) => {
+    if (i<0 || i>=run.teams.length) return
+    currentFlight = i
+    team = run.teams[currentFlight]
+
+    const [err, retData, headers, status] = await APIRequest(`/competitions/${comp.code}/runs/${rid}/flights/${team._id}`, {
+      expected_status: [200, 404]
+    })
+    if (err) {
+        console.log(`error while fetching flight: ${err}`)
+        return
+    }
+    if (status == 404) {
+      data = {}
+      setResult({
+        judges_mark:{}
+      })
+      setResultsOK(false)
+    } else {
+      data = retData
+      setData(data)
+      result = retData.final_marks
+      setResult(result)
+      setResultsOK(true)
+    }
+    console.log("retrieved Data", data)
+
+    setTeam(team)
     setCurrentFlight(currentFlight)
   }
 
+
+  const prevTeam = () => {
+    loadTeam(currentFlight-1)
+  }
+
   const nextTeam = () => {
-    console.log(currentFlight, run.teams.length)
-    if (currentFlight+1 >= run.teams.length)  return
-    currentFlight += 1
-    setTeam(run.teams[currentFlight])
-    setCurrentFlight(currentFlight)
+    loadTeam(currentFlight+1)
   }
 
   const simulateScore = async(data) => {
@@ -120,7 +145,7 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
     simulateScore(data)
   }
 
-  const saveResults = async(publish) => {
+  const saveResults = async(publish, next) => {
 
     const body = {
       tricks: data.tricks.filter(t => t!=null).map(t => t.name),
@@ -141,6 +166,7 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
     }
 
     success(`${team.name}'s flights saved with a ${retData.score} score`)
+    if (next != 0) loadTeam(currentFlight + next)
   }
 
   const headCells = [
@@ -157,10 +183,14 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
     }
   ]
 
+  const didNotStart = async(e) => {
+    if (!confirm('Are you sure to publish a DNS flight ?')) return
+    data.did_not_start = true
+    saveResults(true)
+  }
+
   useEffect(() => {
-    currentFlight = 0
-    setTeam(run.teams.sort((a,b) => b.rank-a.rank)[currentFlight])
-    setCurrentFlight(currentFlight)
+    loadTeam(0)
   }, [])
 
   return (
@@ -183,8 +213,7 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
                         if (!v) return
                         for(const [i,t] of run.teams.entries()){
                             if (t._id == v._id) {
-                                setTeam(v)
-                                setCurrentFlight(i)
+                                loadTeam(i)
                                 return
                             }
                         }
@@ -199,7 +228,7 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
       </Grid>
 }
       <Grid container spacing={2}>
-        separator
+        &nbsp;
       </Grid>
       <Grid container spacing={2}>
         {/* 1st column / maneuvers*/}
@@ -207,14 +236,18 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
             <Grid xs={12}>
               <Typography variant="h5">Maneuvers</Typography>
             </Grid>
-{ [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map(i => (
+{ [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(i => {
+            var trick = null
+            if (data && data.tricks && data.tricks[i]) trick = data.tricks[i]
+            return(
             <Grid xs={12} key={i}>
                     <Autocomplete
                       id="autocomplete-trick-{i}"
                       key="autocomplete-trick-{i}"
                       options={uniqueTricks}
                       getOptionLabel={(p) => `${p.name} (${p.acronym}) (${p.technical_coefficient})`}
-                      renderInput={(params) => <TextField {...params} name="trick" label="Trick" />}
+                      renderInput={(params) => <TextField {...params} name="trick" />}
+                      value={trick}
                       onChange={(e, v) => {
                           data.tricks[i] = v
                           simulateScore(data)
@@ -222,7 +255,7 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
                       }}
                     />
             </Grid>
-))}
+)})}
         </Grid>
         {/* 2nd column */}
         <Grid container xs={6}>
@@ -254,22 +287,36 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
     </TableHead>
             <TableBody>
 { run.judges.map((j) => {
+    var technical = 0
+    var choreography = 0
+    var landing = 0
+    var synchro = 0
+    for (const m in data.marks) {
+      m = data.marks[m]
+      if (m.judge == j._id) {
+        technical = m.technical
+        choreography = m.choreography
+        landing = m.landing
+        synchro = m.synchro
+        break
+      }
+    }
     return (
               <TableRow>
                 <TableCell>
                   <Typography>{ j.name }</Typography>
                 </TableCell>
                 <TableCell>
-                  <SelectMark onChange={e => {setMark('technical', j, e.target.value)}}/>
+                  <SelectMark onChange={e => {setMark('technical', j, e.target.value)}} value={technical}/>
                 </TableCell>
                 <TableCell>
-                  <SelectMark onChange={e => {setMark('choreography', j, e.target.value)}}/>
+                  <SelectMark onChange={e => {setMark('choreography', j, e.target.value)}} value={choreography}/>
                 </TableCell>
                 <TableCell>
-                  <SelectMark onChange={e => {setMark('landing', j, e.target.value)}}/>
+                  <SelectMark onChange={e => {setMark('landing', j, e.target.value)}} value={landing}/>
                 </TableCell>
                 <TableCell>
-                  <SelectMark onChange={e => {setMark('synchro', j, e.target.value)}}/>
+                  <SelectMark onChange={e => {setMark('synchro', j, e.target.value)}} value={synchro}/>
                 </TableCell>
             </TableRow>
 )})}
@@ -339,30 +386,18 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
           </Grid>
           {/* actions */}
           <Grid container xs={12}>
-              <Grid item xs={6}>
-                <Button variant="contained" disabled={!resultsOK} onClick={e => saveResults(false)}>Save Results</Button>
+              <Grid item xs={4}>
+                <Button variant="contained" disabled={!resultsOK} onClick={e => saveResults(false, 0)}>Save</Button>
+                <Button variant="contained" disabled={!resultsOK} onClick={e => saveResults(false, 1)}>Save & Next</Button>
               </Grid>
-              <Grid item xs={6}>
-                <Button variant="contained" disabled={!resultsOK} onClick={e => saveResults(true)}>Save & Publish Results</Button>
+              <Grid item xs={4}>
+                <Button variant="contained" disabled={!resultsOK} onClick={e => saveResults(true, 0)}>Save & Publish</Button>
+                <Button variant="contained" disabled={!resultsOK} onClick={e => saveResults(true, 1)}>Save & Publish & Next</Button>
               </Grid>
-{/*
-              <Grid item xs={6}>
-                <Button disabled={!resultsOK}>Save Results + next Run</Button>
+              <Grid item xs={4}>
+                <Button onClick={didNotStart}>Did not start</Button>
               </Grid>
-              <Grid item xs={6}>
-                <Button disabled={!resultsOK}>Publish Results + next Run</Button>
-              </Grid>
-*/}
           </Grid>
-        </Grid>
-      </Grid>
-      <Grid container spacing={7}>
-        <Grid item xs={12} sm={12}>
-          <EnhancedTable
-            rows={run.flights}
-            headCells={headCells}
-            orderById='rank'
-          />
         </Grid>
       </Grid>
     </CardContent>
