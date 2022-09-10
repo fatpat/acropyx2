@@ -325,7 +325,7 @@ async def run_reopen(id: str, i: int):
     response_model=Flight,
     dependencies=[Depends(auth)],
 )
-async def flight_get(id: str, i: int, pilot_team_id: int):
+async def flight_get(id: str, i: int, pilot_team_id):
     log.debug(f"flight_get{id} {i}  {pilot_team_id}")
     comp = await Competition.get(id)
     return await comp.flight_get(run_i= i, pilot_or_team=pilot_team_id)

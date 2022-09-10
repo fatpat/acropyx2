@@ -512,15 +512,15 @@ class Competition(CompetitionNew):
 
         if self.type == CompetitionType.solo:
             if int(pilot_or_team) not in run.pilots:
-                raise HTTPException(400, f"Pilot #{id} does not participate in the run number #{run_i} of the comp ({self.name})")
+                raise HTTPException(400, f"Pilot #{pilot_or_team} does not participate in the run number #{run_i} of the comp ({self.name})")
             if int(pilot_or_team) not in self.pilots:
-                raise HTTPException(400, f"Pilot #{id} does not participate in this comp ({self.name})")
+                raise HTTPException(400, f"Pilot #{pilot_or_team} does not participate in this comp ({self.name})")
 
         if self.type == CompetitionType.synchro:
-            if id not in run.teams:
-                raise HTTPException(400, f"Team #{id} does not participate in the run number #{run_i} of the comp ({self.name})")
-            if id not in self.teams:
-                raise HTTPException(400, f"Team #{id} does not participate in this comp ({self.name})")
+            if pilot_or_team not in run.teams:
+                raise HTTPException(400, f"Team #{pilot_or_team} does not participate in the run number #{run_i} of the comp ({self.name})")
+            if pilot_or_team not in self.teams:
+                raise HTTPException(400, f"Team #{pilot_or_team} does not participate in this comp ({self.name})")
 
         for i, f in enumerate(self.runs[run_i].flights):
             if (self.type == CompetitionType.solo and f.pilot == int(pilot_or_team)) or (self.type == CompetitionType.synchro and f.team == pilot_or_team):
