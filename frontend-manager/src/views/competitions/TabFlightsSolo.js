@@ -25,7 +25,7 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
 import Editable from 'src/components/Editable'
 import Autocomplete from '@mui/material/Autocomplete'
 import NativeSelect from '@mui/material/NativeSelect'
-
+import LinearProgress from '@mui/material/LinearProgress'
 
 // ** local
 import EnhancedTable from 'src/views/tables/EnhancedTable'
@@ -45,6 +45,7 @@ const TabFlights = ({ comp, run, rid }) => {
   const [success, info, warning, error] = useNotifications()
 
   // ** states
+  const [loadingMessage, setLoading] = useState(null)
   const [currentFlight, setCurrentFlight] = useState(0)
   const [pilot, setPilot] = useState(null)
   const [data, setData] = useState({
@@ -66,12 +67,14 @@ const TabFlights = ({ comp, run, rid }) => {
     if (i<0 || i>=run.pilots.length) return
     currentFlight = i
     pilot = run.pilots[currentFlight]
+    setLoading(`Loading flight for ${pilot.name}`)
 
     const [err, retData, headers, status] = await APIRequest(`/competitions/${comp.code}/runs/${rid}/flights/${pilot.civlid}`, {
       expected_status: [200, 404]
     })
     if (err) {
         console.log(`error while fetching flight: ${err}`)
+        setLoading(null)
         return
     }
     if (status == 404) {
@@ -91,6 +94,7 @@ const TabFlights = ({ comp, run, rid }) => {
 
     setPilot(pilot)
     setCurrentFlight(currentFlight)
+    setLoading(null)
   }
 
   const prevPilot = () => {
@@ -177,12 +181,16 @@ const TabFlights = ({ comp, run, rid }) => {
 
   useEffect(() => {
     loadPilot(0)
-/*
-    currentFlight = 0
-    setPilot(run.pilots.sort((a,b) => b.rank-a.rank)[currentFlight])
-    setCurrentFlight(currentFlight)
-*/
   }, [])
+
+  if (loadingMessage) {
+    return (
+      <Box sx={{ width: '100%', textAlign: 'center' }}>
+        <LinearProgress />
+        {loadingMessage}
+      </Box>
+    )
+  }
 
   return (
     <CardContent>

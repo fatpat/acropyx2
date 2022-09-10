@@ -23,7 +23,7 @@ import AddIcon from '@mui/icons-material/Add'
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
 import Editable from 'src/components/Editable'
 import Autocomplete from '@mui/material/Autocomplete'
-
+import LinearProgress from '@mui/material/LinearProgress'
 
 // ** local
 import EnhancedTable from 'src/views/tables/EnhancedTable'
@@ -44,6 +44,7 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
   const [success, info, warning, error] = useNotifications()
 
   // ** states
+  const [loadingMessage, setLoading] = useState(null)
   const [currentFlight, setCurrentFlight] = useState(0)
   const [team, setTeam] = useState(null)
   const [data, setData] = useState({
@@ -65,12 +66,14 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
     if (i<0 || i>=run.teams.length) return
     currentFlight = i
     team = run.teams[currentFlight]
+    setLoading(`Loading flight for ${team.name}`)
 
     const [err, retData, headers, status] = await APIRequest(`/competitions/${comp.code}/runs/${rid}/flights/${team._id}`, {
       expected_status: [200, 404]
     })
     if (err) {
         console.log(`error while fetching flight: ${err}`)
+        setLoading(null)
         return
     }
     if (status == 404) {
@@ -90,6 +93,7 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
 
     setTeam(team)
     setCurrentFlight(currentFlight)
+    setLoading(null)
   }
 
 
@@ -192,6 +196,15 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
   useEffect(() => {
     loadTeam(0)
   }, [])
+
+  if (loadingMessage) {
+    return (
+      <Box sx={{ width: '100%', textAlign: 'center' }}>
+        <LinearProgress />
+        {loadingMessage}
+      </Box>
+    )
+  }
 
   return (
     <CardContent>
