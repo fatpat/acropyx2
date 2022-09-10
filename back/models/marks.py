@@ -19,6 +19,11 @@ class JudgeMarkExport(BaseModel):
     landing: Optional[float]
     synchro: Optional[float]
 
+    _technical = validator('technical', allow_reuse=True)(float3digits)
+    _choreography = validator('choreography', allow_reuse=True)(float3digits)
+    _landing = validator('landing', allow_reuse=True)(float3digits)
+    _synchro = validator('synchro', allow_reuse=True)(float3digits)
+
     class Config:
         json_encoders = {ObjectId: str}
 
@@ -72,6 +77,15 @@ class FinalMarkExport(BaseModel):
     warnings: list[str]
     malus: float 
     notes: List[str] 
+
+    _technicity = validator('technicity', allow_reuse=True)(float3digits)
+    _bonus_percentage = validator('bonus_percentage', allow_reuse=True)(float3digits)
+    _technical = validator('technical', allow_reuse=True)(float3digits)
+    _choreography = validator('choreography', allow_reuse=True)(float3digits)
+    _landing = validator('landing', allow_reuse=True)(float3digits)
+    _synchro = validator('synchro', allow_reuse=True)(float3digits)
+    _bonus = validator('bonus', allow_reuse=True)(float3digits)
+    _score = validator('score', allow_reuse=True)(float3digits)
 
     class Config:
         json_encoders = {ObjectId: str}
