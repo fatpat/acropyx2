@@ -144,7 +144,7 @@ const CompetitionsPage = ({ data }) => {
 
 export async function getStaticPaths() {
   // Call an external API endpoint to get competitions
-  let res = await get('public/competitions')
+  let res = await get('/public/competitions/')
 
   // Get the paths we want to pre-render based on posts
   const paths = res.map((c) => ({
@@ -165,12 +165,12 @@ export async function getStaticPaths() {
 
 // This gets called on every request
 export async function getStaticProps({ params }) {
-  let data = await get(`public/competitions/${params.cid}`)
+  let data = await get(`/public/competitions/${params.cid}`)
 
   //let data = mockData
 
   // Pass data to the page via props
-  return { props: { data }, revalidate: 10 }
+  return { props: { data }, revalidate: parseInt(process.env.NEXT_CACHE_DURATION)}
 }
 
 const mockData = {

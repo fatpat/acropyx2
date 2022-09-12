@@ -22,12 +22,16 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
+import Typography from '@mui/material/Typography'
 
 // ** Third Party Imports
 import DatePicker from 'react-datepicker'
 
 // ** Styled Components
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
+
+// ** local imports
+import CardPilot from 'src/views/cards/CardPilot'
 
 const CustomInput = forwardRef((props, ref) => {
   return <TextField inputRef={ref} label='Birth Date' fullWidth {...props} />
@@ -39,31 +43,16 @@ const TabPilots = ({ pilots }) => {
 
   return (
     <CardContent>
-      <Grid container spacing={7}>
-        <Grid item xs={12} md={6} >
-          <TableContainer component={Paper}>
-            <Table aria-label='simple table'>
-              <TableHead>
-                <TableRow>
-                  <TableCell>#</TableCell>
-                  <TableCell align='right'>Name</TableCell>
-                  <TableCell align='right'>Rank</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {pilots.map((row, index) => (
-                  <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                    <TableCell component='th' scope='row'>
-                      {index + 1}
-                    </TableCell>
-                    <TableCell align='right'>{row.name}</TableCell>
-                    <TableCell align='right'>{row.rank}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+      <Grid container spacing={6}>
+        <Grid item xs={12} sx={{ paddingBottom: 4 }}>
+          <Typography variant='h5'>Pilots</Typography>
         </Grid>
+        {pilots.sort((a,b) => a.rank - b.rank).map(p => (
+          <Grid item xs={12} sm={4} key={p.civlid}>
+            <CardPilot pilot={p} />
+            {/* <CardHorizontalPilot pilot={p} /> */}
+          </Grid>
+        ))}
       </Grid>
     </CardContent>
   )

@@ -1,11 +1,13 @@
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
-
-// ** Demo Components Imports
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import EnhancedTable from 'src/views/tables/EnhancedTable'
 import { get } from 'src/util/backend'
+
+// ** Styled Component Import
+import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
+
 
 const headCells = [
   {
@@ -15,6 +17,12 @@ const headCells = [
     type: 'ACTION',
     path: '/competitions',
     label: 'Name'
+  },
+  {
+    id: 'location',
+    numeric: false,
+    disablePadding: false,
+    label: 'Location'
   },
   {
     id: 'state',
@@ -29,72 +37,55 @@ const headCells = [
     label: 'Start date'
   },
   {
-    id: 'end_date',
+    id: 'pilots_or_teams',
     numeric: false,
     disablePadding: false,
-    label: 'End date'
-  },
-  {
-    id: 'pilots',
-    numeric: false,
-    disablePadding: false,
-    label: 'Pilots'
-  },
-  {
-    id: 'judges',
-    numeric: false,
-    disablePadding: false,
-    label: 'Judges'
+    label: 'Registered Pilots or Team'
   }
 ]
 
-function createData(id, name, state, start_date, end_date, pilots, judges) {
+function createData(id, name, location, state, start_date, pilots_or_teams) {
   return {
     id,
     name,
+    location,
     state,
     start_date,
-    end_date,
-    pilots,
-    judges
+    pilots_or_teams,
   }
 }
 
-const CompetitionsPage = ({ data }) => {
+const Dashboard = ({data}) => {
   return (
-    <Grid container spacing={6}>
-      <Grid item xs={12}>
-        <Typography variant='h5'>Competitions</Typography>
+    <ApexChartWrapper>
+      <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <Typography variant='h5'>All competitions</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Card>
+            <EnhancedTable
+              rows={data.map(p =>
+                createData(p.code, p.name, p.location, p.state, p.start_date, p.type == 'solo' ? p.number_of_pilots : p.number_of_teams)
+              )}
+              headCells={headCells}
+              orderById='start_date'
+              defaultOrder="desc"
+              defaultRowsPerPage='25'
+            />
+          </Card>
+        </Grid>
       </Grid>
-      <Grid item xs={12}>
-        <Card>
-          <EnhancedTable
-            rows={data.map(p =>
-              createData(
-                p.code,
-                p.name,
-                p.state,
-                p.start_date,
-                p.end_date,
-                p.pilots.length,
-                p.judges.length
-              )
-            )}
-            headCells={headCells}
-            orderById='rank'
-          />
-        </Card>
-      </Grid>
-    </Grid>
+    </ApexChartWrapper>
   )
 }
 
 // This gets called on every request
 export async function getStaticProps() {
-  let data = await get('public/competitions')
+  let data = await get('/public/competitions/')
 
   // Pass data to the page via props
-  return { props: { data }, revalidate: 10 }
+  return { props: { data }, revalidate: parseInt(process.env.NEXT_CACHE_DURATION)}
 }
 
-export default CompetitionsPage
+export default Dashboard

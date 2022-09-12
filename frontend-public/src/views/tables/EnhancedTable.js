@@ -138,13 +138,13 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired
 }
 
-export default function EnhancedTable({ rows, headCells, orderById, actionRowId }) {
-  const [order, setOrder] = React.useState('asc')
+export default function EnhancedTable({ rows, headCells, orderById, actionRowId, defaultOrder, defaultRowsPerPage }) {
+  const [order, setOrder] = React.useState(defaultOrder ?? 'asc')
   const [orderBy, setOrderBy] = React.useState(orderById)
   const [selected, setSelected] = React.useState([])
   const [page, setPage] = React.useState(0)
   const [dense, setDense] = React.useState(false)
-  const [rowsPerPage, setRowsPerPage] = React.useState(5)
+  const [rowsPerPage, setRowsPerPage] = React.useState(defaultRowsPerPage ?? 5)
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc'

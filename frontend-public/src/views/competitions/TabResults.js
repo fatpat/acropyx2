@@ -40,6 +40,9 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import SquareIcon from '@mui/icons-material/Square'
+import Filter1Icon from '@mui/icons-material/Filter1'
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
+import FlightIcon from '@mui/icons-material/Flight'
 
 // ** Third Party Imports
 import DatePicker from 'react-datepicker'
@@ -227,7 +230,7 @@ const TabResults = ({ results }) => {
   }
 
   const handleBackButton = (event, index) => {
-    console("back")
+    console.log("back")
     setValue(-99)
     router.push(
       {
@@ -241,13 +244,13 @@ const TabResults = ({ results }) => {
   return (
     <CardContent>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <Box hidden={value == -99}></Box>
           <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} hidden={value != -99}>
             <ListItemButton onClick={event => handleListItemClick(event, 0)}>
               <ListItemAvatar>
                 <Avatar>
-                  <ImageIcon />
+                  <EmojiEventsIcon />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary='Overall results' />
@@ -256,7 +259,7 @@ const TabResults = ({ results }) => {
               <ListItemButton key={index} onClick={event => handleListItemClick(event, index + 1)}>
                 <ListItemAvatar>
                   <Avatar>
-                    <WorkIcon />
+                    <FlightIcon />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary={'Run ' + (index + 1) + ' results'} />

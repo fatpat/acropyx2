@@ -57,10 +57,10 @@ const PilotsPage = ({ data }) => {
 }
 
 export async function getStaticProps() {
-  let data = await get('public/pilots')
+  let data = await get('/public/pilots/')
 
   // Pass data to the page via props
-  return { props: { data }, revalidate: 10 }
+  return { props: { data }, revalidate: parseInt(process.env.NEXT_CACHE_DURATION)}
 }
 
 export default PilotsPage

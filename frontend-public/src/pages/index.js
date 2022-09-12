@@ -19,6 +19,12 @@ const headCells = [
     label: 'Name'
   },
   {
+    id: 'location',
+    numeric: false,
+    disablePadding: false,
+    label: 'Location'
+  },
+  {
     id: 'state',
     numeric: false,
     disablePadding: false,
@@ -31,34 +37,21 @@ const headCells = [
     label: 'Start date'
   },
   {
-    id: 'end_date',
+    id: 'pilots_or_teams',
     numeric: false,
     disablePadding: false,
-    label: 'End date'
-  },
-  {
-    id: 'pilots',
-    numeric: false,
-    disablePadding: false,
-    label: 'Pilots'
-  },
-  {
-    id: 'judges',
-    numeric: false,
-    disablePadding: false,
-    label: 'Judges'
+    label: 'Registered Pilots or Team'
   }
 ]
 
-function createData(id, name, state, start_date, end_date, pilots, judges) {
+function createData(id, name, location, state, start_date, pilots_or_teams) {
   return {
     id,
     name,
+    location,
     state,
     start_date,
-    end_date,
-    pilots,
-    judges
+    pilots_or_teams,
   }
 }
 
@@ -73,10 +66,12 @@ const Dashboard = ({data}) => {
           <Card>
             <EnhancedTable
               rows={data.map(p =>
-                createData(p.code, p.name, p.state, p.start_date, p.end_date, p.pilots.length, p.judges.length)
+                createData(p.code, p.name, p.location, p.state, p.start_date, p.type == 'solo' ? p.number_of_pilots : p.number_of_teams)
               )}
               headCells={headCells}
-              orderById='rank'
+              orderById='start_date'
+              defaultOrder="desc"
+              defaultRowsPerPage='25'
             />
           </Card>
         </Grid>
@@ -87,12 +82,12 @@ const Dashboard = ({data}) => {
 
 // This gets called on every request
 export async function getStaticProps() {
-  let data = await get('public/competitions')
+  let data = await get('/public/competitions/')
 
   data = data.filter(c => c.state === 'open')
 
   // Pass data to the page via props
-  return { props: { data }, revalidate: 10 }
+  return { props: { data }, revalidate: parseInt(process.env.NEXT_CACHE_DURATION)}
 }
 
 export default Dashboard

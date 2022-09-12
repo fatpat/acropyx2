@@ -42,26 +42,22 @@ const TabJudges = ({ judges }) => {
   return (
     <CardContent>
       <Grid container spacing={7}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TableContainer component={Paper}>
             <Table aria-label='simple table'>
               <TableHead>
                 <TableRow>
-                  <TableCell>#</TableCell>
-                  <TableCell align='right'>Name</TableCell>
-                  <TableCell align='right'>Level</TableCell>
-                  <TableCell align='right'>Country</TableCell>
+                  <TableCell align='center'>Name</TableCell>
+                  <TableCell align='center'>Level</TableCell>
+                  <TableCell align='center'>Country</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {judges.map((row, index) => (
                   <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                    <TableCell component='th' scope='row'>
-                      {index + 1}
-                    </TableCell>
-                    <TableCell align='right'>{row.name}</TableCell>
-                    <TableCell align='right'>{row.level}</TableCell>
-                    <TableCell align='right'>{row.country}</TableCell>
+                    <TableCell align='center'>{row.name}</TableCell>
+                    <TableCell align='center'>{row.level}</TableCell>
+                    <TableCell align='center'>{row.country}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
