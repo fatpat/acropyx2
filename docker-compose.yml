@@ -10,32 +10,33 @@ services:
     volumes:
         - ./back:/app
     tty: true
+    environment:
+      - MONGODB_URL=mongodb://mongo:mongo@mongodb/
+      - DATABASE=acropyx2-dev
+      - CACHE_EXPIRES=1
 
-#  back-test:
-#    build: ./back
-#    environment:
-#      - MONGODB_URL=mongodb://mongo:mongo@mongodb
-#      - DATABASE=acropyx2-testing
-#    volumes:
-#      - ./back:/app
-
-#  public:
-#    image: node:18-alpine
-#    command: sh -c "npm ci && npm run dev"
-#    working_dir: /app
-#    ports:
-#      - 3000:3000
-#    volumes:
-#      - ./frontend-public:/app
+  public:
+    image: node:18-alpine
+    command: sh -c "npm install && npm run dev"
+    working_dir: /app
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend-public:/app
+    environment:
+      - NEXT_PUBLIC_API_URL=http://back:8000
+      - NEXT_CACHE_DURATION=1
 
   manager:
     image: node:18-alpine
-    command: sh -c "npm ci && npm run dev"
+    command: sh -c "npm install && npm run dev"
     working_dir: /app
     ports:
       - 3001:3001
     volumes:
       - ./frontend-manager:/app
+    environment:
+      - NEXT_PUBLIC_API_URL=http://127.0.0.1:8000
 
   mongodb:
     image: mongo:5.0
