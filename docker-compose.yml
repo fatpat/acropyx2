@@ -19,14 +19,14 @@ services:
 #    volumes:
 #      - ./back:/app
 
-  public:
-    image: node:18-alpine
-    command: sh -c "npm ci && npm run dev"
-    working_dir: /app
-    ports:
-      - 3000:3000
-    volumes:
-      - ./frontend-public:/app
+#  public:
+#    image: node:18-alpine
+#    command: sh -c "npm ci && npm run dev"
+#    working_dir: /app
+#    ports:
+#      - 3000:3000
+#    volumes:
+#      - ./frontend-public:/app
 
   manager:
     image: node:18-alpine
