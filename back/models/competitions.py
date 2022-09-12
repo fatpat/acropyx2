@@ -277,6 +277,10 @@ class Competition(CompetitionNew):
             pilots = comp.pilots,
             teams = comp.teams,
             judges = comp.judges,
+            number_of_pilots = len(self.pilots),
+            number_of_teams = len(self.teams),
+            number_of_judges = len(self.judges),
+            number_of_runs = len(self.runs),
             state = comp.state,
             results = await results.export(cache=cache)
         )
