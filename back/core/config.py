@@ -15,8 +15,8 @@ class Settings(BaseSettings):
     SERVER_NAME: str = PROJECT_NAME
     SERVER_HOST: AnyHttpUrl = "http://localhost:8000"
 
-    MONGODB_URL: str = 'mongodb://mongo:mongo@127.0.0.1/?retryWrites=true&w=majority'
-    DATABASE: str = 'acropyx2'
+    MONGODB_URL: str = 'mongodb://127.0.0.1/'
+    DATABASE: str = 'acropyx2-database-developtment'
     TESTDB: str = None
     # no auth by default
     ADMIN_USER: str = 'admin'
