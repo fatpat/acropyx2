@@ -77,6 +77,9 @@ class CompetitionPublicExport(BaseModel):
 
 class CompetitionPublicExportWithResults(CompetitionPublicExport):
     results: CompetitionResultsExport
+    pilots: List[Pilot]
+    teams: List[TeamExport]
+    judges: List[Judge]
 
 class CompetitionNew(BaseModel):
     name: str = Field(..., min_len=1)
