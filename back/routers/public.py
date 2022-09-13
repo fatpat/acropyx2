@@ -23,7 +23,7 @@ public = APIRouter()
     response_description="List all public",
     response_model=List[Pilot],
 )
-@cache(expire=settings.CACHE_EXPIRES)
+#@cache(expire=settings.CACHE_EXPIRES)
 async def list():
     return await Pilot.getall()
 
@@ -35,7 +35,7 @@ async def list():
     response_description="Get a Pilot",
     response_model=Pilot,
 )
-@cache(expire=settings.CACHE_EXPIRES)
+#@cache(expire=settings.CACHE_EXPIRES)
 async def get(civlid: int):
     return await Pilot.get(civlid)
 
@@ -47,7 +47,7 @@ async def get(civlid: int):
     response_description="List all teams",
     response_model=List[TeamExport],
 )
-@cache(expire=settings.CACHE_EXPIRES)
+#@cache(expire=settings.CACHE_EXPIRES)
 async def list():
     teams = []
     cache = await UtilsCtrl.get_cache()
@@ -63,7 +63,7 @@ async def list():
     response_description="Get a Team",
     response_model=TeamExport,
 )
-@cache(expire=settings.CACHE_EXPIRES)
+#@cache(expire=settings.CACHE_EXPIRES)
 async def get(id: str):
     team = await Team.get(id, False)
     return await team.export(cache=await UtilsCtrl.get_cache())
@@ -76,7 +76,7 @@ async def get(id: str):
     response_description="List all judges",
     response_model=List[Judge],
 )
-@cache(expire=settings.CACHE_EXPIRES)
+#@cache(expire=settings.CACHE_EXPIRES)
 async def list():
     return await Judge.getall(False)
 
@@ -88,7 +88,7 @@ async def list():
     response_description="Get a Judge",
     response_model=Judge,
 )
-@cache(expire=settings.CACHE_EXPIRES)
+#@cache(expire=settings.CACHE_EXPIRES)
 async def get(id: str):
     return await Judge.get(id, False)
 
@@ -100,7 +100,7 @@ async def get(id: str):
     response_description="List all competitions",
     response_model=List[CompetitionPublicExport],
 )
-@cache(expire=settings.CACHE_EXPIRES)
+#@cache(expire=settings.CACHE_EXPIRES)
 async def list():
     comps = []
     for comp in await Competition.getall():
@@ -117,7 +117,7 @@ async def list():
     response_description="Get a Competition",
     response_model=CompetitionPublicExportWithResults,
 )
-@cache(expire=settings.CACHE_EXPIRES)
+#@cache(expire=settings.CACHE_EXPIRES)
 async def get_by_id(id: str):
     comp = await Competition.get(id)
     return await comp.export_public_with_results(cache=await UtilsCtrl.get_cache())
