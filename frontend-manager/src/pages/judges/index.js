@@ -135,8 +135,7 @@ const JudgesPage = () => {
     loadJudges()
   }
 
-  const deleteJudge = async (e) => {
-      const id = e.target.dataset.id
+  const deleteJudge = async (id) => {
       if (!confirm(`Are you sure you want to delete Judge ${name} (${id}) ?`)) return
 
       setLoading(true)
@@ -155,8 +154,7 @@ const JudgesPage = () => {
     setModalOpen(true)
   }
 
-  const openUpdateModal = (e) => {
-    const id = e.target.dataset.id
+  const openUpdateModal = (id) => {
     const judge = data.find(j => j._id == id)
     setModalTitle(`Updating judge ${id}`)
     setNewJudge(judge)

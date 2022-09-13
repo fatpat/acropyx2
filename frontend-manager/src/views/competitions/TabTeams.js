@@ -21,8 +21,7 @@ const TabTeams = ({teams, allTeams, update}) => {
   // ** State
   const [value, setValue] = useState([])
 
-  const removeTeam = async(e) => {
-    const id = e.currentTarget.dataset.id
+  const removeTeam = async(id) => {
     if (!id) return
     const name = allTeams.filter(p => p._id == id)[0].name
     if (!confirm(`Are you sure you want to remove team ${name} (${id}) ?`)) return

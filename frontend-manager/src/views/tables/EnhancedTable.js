@@ -269,7 +269,7 @@ export default function EnhancedTable({ rows, headCells, orderById, actionRowId,
                             if (h.func) {
                                 return (
                                   <TableCell align='left' key={index}>
-                                    <Button onClick={h.func} data-id={row.id}>
+                                    <Button onClick={() => h.func(row.id)}>
                                       {value}
                                     </Button>
                                   </TableCell>

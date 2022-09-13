@@ -127,8 +127,7 @@ const TeamsPage = () => {
     loadTeams()
   }
 
-  const deleteTeam = async (e) => {
-      const id = e.target.dataset.id
+  const deleteTeam = async (id) => {
       if (!confirm(`Are you sure you want to delete Team ${name} (${id}) ?`)) return
 
       setLoading(true)
@@ -147,8 +146,7 @@ const TeamsPage = () => {
     setModalOpen(true)
   }
 
-  const openUpdateModal = (e) => {
-    const id = e.target.dataset.id
+  const openUpdateModal = (id) => {
     const team = data.find(j => j._id == id)
     setModalTitle(`Updating team ${id}`)
     setNewTeam(team)

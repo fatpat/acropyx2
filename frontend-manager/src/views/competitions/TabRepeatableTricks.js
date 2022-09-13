@@ -18,8 +18,7 @@ const TabRepeatableTricks = ({tricks, allTricks, update}) => {
   // ** State
   const [value, setValue] = useState([])
 
-  const removeRepeatableTrick = async(e) => {
-    const id = e.currentTarget.dataset.id
+  const removeRepeatableTrick = async(id) => {
     if (!id) return
     const name = allTricks.filter(j => j.id == id)[0].name
     if (!confirm(`Are you sure you want to remove repeatable_trick ${name} (${id}) ?`)) return

@@ -143,11 +143,10 @@ const TricksPage = () => {
     loadTricks()
   }
 
-  const deleteTrick = async (e) => {
-      const id = e.target.dataset.id
-      if (!confirm(`Are you sure you want to delete Trick ${name} (${id}) ?`)) return
+  const deleteTrick = async (id) => {
+    if (!confirm(`Are you sure you want to delete Trick ${name} (${id}) ?`)) return
 
-      setLoading(true)
+    setLoading(true)
     const [err, data, headers] = await APIRequest(`/tricks/${id}`, {method: "DELETE", expected_status: 204})
     if (err) {
       error(`Error while deleting Trick ${id}: ${err}`)
@@ -163,8 +162,7 @@ const TricksPage = () => {
     setModalOpen(true)
   }
 
-  const openUpdateModal = (e) => {
-    const id = e.target.dataset.id
+  const openUpdateModal = (id) => {
     const trick = data.find(j => j._id == id)
     setModalTitle(`Updating trick ${id}`)
     setNewTrick(trick)

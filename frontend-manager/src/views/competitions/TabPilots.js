@@ -21,8 +21,8 @@ const TabPilots = ({pilots, allPilots, update}) => {
   // ** State
   const [value, setValue] = useState([])
 
-  const removePilot = async(e) => {
-    const id = e.currentTarget.dataset.id
+  const removePilot = async(id) => {
+    console.log('removePilot', id)
     if (!id) return
     const name = allPilots.filter(p => p.civlid == id)[0].name
     if (!confirm(`Are you sure you want to remove pilot ${name} (${id}) ?`)) return
