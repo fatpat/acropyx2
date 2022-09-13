@@ -230,7 +230,7 @@ const TabResults = ({ results }) => {
   }
 
   const handleBackButton = (event, index) => {
-    console.log("back")
+    console.log('back')
     setValue(-99)
     router.push(
       {

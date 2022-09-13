@@ -47,12 +47,14 @@ const TabPilots = ({ pilots }) => {
         <Grid item xs={12} sx={{ paddingBottom: 4 }}>
           <Typography variant='h5'>Pilots</Typography>
         </Grid>
-        {pilots.sort((a,b) => a.rank - b.rank).map(p => (
-          <Grid item xs={12} sm={4} key={p.civlid}>
-            <CardPilot pilot={p} />
-            {/* <CardHorizontalPilot pilot={p} /> */}
-          </Grid>
-        ))}
+        {pilots
+          .sort((a, b) => a.rank - b.rank)
+          .map(p => (
+            <Grid item xs={12} sm={4} key={p.civlid}>
+              <CardPilot pilot={p} />
+              {/* <CardHorizontalPilot pilot={p} /> */}
+            </Grid>
+          ))}
       </Grid>
     </CardContent>
   )

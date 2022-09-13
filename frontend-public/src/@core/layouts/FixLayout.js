@@ -40,15 +40,18 @@ const sections = [
   { title: 'Science', url: '#' },
   { title: 'Health', url: '#' },
   { title: 'Style', url: '#' },
-  { title: 'Travel', url: '#' },
-];
+  { title: 'Travel', url: '#' }
+]
 
 const BlankLayout = ({ children }) => {
   return (
     <Container maxWidth='lg'>
       <BlankLayoutWrapper className='layout-wrapper'>
-        <Header title="Acropyx" sections={FixNavItems()} />
-        <Box className='app-content' sx={{ minHeight: '100vh', overflowX: 'hidden', position: 'relative', padding: '10px' }}>
+        <Header title='Acropyx' sections={FixNavItems()} />
+        <Box
+          className='app-content'
+          sx={{ minHeight: '100vh', overflowX: 'hidden', position: 'relative', padding: '10px' }}
+        >
           {children}
         </Box>
       </BlankLayoutWrapper>

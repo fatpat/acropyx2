@@ -58,7 +58,7 @@ const navigation = () => {
       title: 'Tricks',
       icon: FormatLetterCase,
       path: '/tricks'
-    },
+    }
   ]
 }
 

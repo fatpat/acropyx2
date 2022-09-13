@@ -40,7 +40,7 @@ const TabTeams = ({ teams }) => {
   return (
     <CardContent>
       <Grid container spacing={7}>
-        <Grid item xs={12} md={6} >
+        <Grid item xs={12} md={6}>
           <TableContainer component={Paper}>
             <Table aria-label='simple table'>
               <TableHead>
@@ -57,9 +57,11 @@ const TabTeams = ({ teams }) => {
                       {index + 1}
                     </TableCell>
                     <TableCell align='right'>{row.name}</TableCell>
-                    <TableCell align='right'>{row.pilots.map((p, i) => (
-                      <div key={i}>{p.name}</div>
-                    ))}</TableCell>
+                    <TableCell align='right'>
+                      {row.pilots.map((p, i) => (
+                        <div key={i}>{p.name}</div>
+                      ))}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

@@ -28,6 +28,7 @@ function descendingComparator(a, b, orderBy) {
   if (b[orderBy] > a[orderBy]) {
     return 1
   }
+
   return 0
 }
 
@@ -46,13 +47,16 @@ function stableSort(array, comparator) {
     if (order !== 0) {
       return order
     }
+
     return a[1] - b[1]
   })
+
   return stabilizedThis.map(el => el[0])
 }
 
 function EnhancedTableHead(props) {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells } = props
+
   const createSortHandler = property => event => {
     onRequestSort(event, property)
   }
@@ -156,6 +160,7 @@ export default function EnhancedTable({ rows, headCells, orderById, actionRowId,
     if (event.target.checked) {
       const newSelecteds = rows.map(n => n.name)
       setSelected(newSelecteds)
+
       return
     }
     setSelected([])
@@ -231,6 +236,7 @@ export default function EnhancedTable({ rows, headCells, orderById, actionRowId,
                     >
                       {headCells.map((h, index) => {
                         const isActionRowId = h.id === actionRowId
+
                         // if (index == 0) {
                         //   return (
                         //     <TableCell component='th' id={labelId} scope='row' padding='none'>
@@ -248,6 +254,7 @@ export default function EnhancedTable({ rows, headCells, orderById, actionRowId,
                                 </TableCell>
                               )
                             }
+
                             return (
                               <TableCell align='left'>
                                 <Checkbox disabled />
@@ -269,6 +276,7 @@ export default function EnhancedTable({ rows, headCells, orderById, actionRowId,
                             )
                           default:
                             return <TableCell align={h.numeric ? 'right' : 'left'}>{row[h.id]}</TableCell>
+
                           // }
                         }
                       })}

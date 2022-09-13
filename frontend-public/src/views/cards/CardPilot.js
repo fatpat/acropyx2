@@ -38,7 +38,9 @@ const CardUser = ({ pilot }) => {
         >
           <Box sx={{ mr: 2, mb: 1, display: 'flex', flexDirection: 'column' }}>
             <Typography variant='h6'>
-              <Link href={pilot.link} target="_blank" rel="noopener,noreferrer">{pilot.name}</Link>{' '}
+              <Link href={pilot.link} target='_blank' rel='noopener,noreferrer'>
+                {pilot.name}
+              </Link>{' '}
               <ReactCountryFlag
                 countryCode={countriesQuery.convertAlphaCode(pilot.country)}
                 svg

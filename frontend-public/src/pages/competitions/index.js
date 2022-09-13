@@ -8,7 +8,6 @@ import { get } from 'src/util/backend'
 // ** Styled Component Import
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
-
 const headCells = [
   {
     id: 'name',
@@ -51,11 +50,11 @@ function createData(id, name, location, state, start_date, pilots_or_teams) {
     location,
     state,
     start_date,
-    pilots_or_teams,
+    pilots_or_teams
   }
 }
 
-const Dashboard = ({data}) => {
+const Dashboard = ({ data }) => {
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
@@ -66,11 +65,18 @@ const Dashboard = ({data}) => {
           <Card>
             <EnhancedTable
               rows={data.map(p =>
-                createData(p.code, p.name, p.location, p.state, p.start_date, p.type == 'solo' ? p.number_of_pilots : p.number_of_teams)
+                createData(
+                  p.code,
+                  p.name,
+                  p.location,
+                  p.state,
+                  p.start_date,
+                  p.type == 'solo' ? p.number_of_pilots : p.number_of_teams
+                )
               )}
               headCells={headCells}
               orderById='start_date'
-              defaultOrder="desc"
+              defaultOrder='desc'
               defaultRowsPerPage='25'
             />
           </Card>
@@ -85,7 +91,7 @@ export async function getStaticProps() {
   let data = await get('/public/competitions/')
 
   // Pass data to the page via props
-  return { props: { data }, revalidate: parseInt(process.env.NEXT_CACHE_DURATION)}
+  return { props: { data }, revalidate: parseInt(process.env.NEXT_CACHE_DURATION) }
 }
 
 export default Dashboard

@@ -37,7 +37,7 @@ const TabJudges = ({ judges }) => {
   // ** State
   const [date, setDate] = useState(null)
 
-  console.log(judges);
+  console.log(judges)
 
   return (
     <CardContent>

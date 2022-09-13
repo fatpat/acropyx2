@@ -116,9 +116,11 @@ function TabPanel(props) {
                       {index + 1}
                     </TableCell>
                     <TableCell align='right'>{row.teamName}</TableCell>
-                    <TableCell align='right'>{row.pilots.map((p,i)=>(
-                      <div key="i">{p.name}</div>
-                    ))}</TableCell>
+                    <TableCell align='right'>
+                      {row.pilots.map((p, i) => (
+                        <div key='i'>{p.name}</div>
+                      ))}
+                    </TableCell>
                     <TableCell align='right'>{row.score.toLocaleString('en-US')}</TableCell>
                   </TableRow>
                 ))}
@@ -259,7 +261,9 @@ const TabResults = ({ results }) => {
               key={index + 1}
               rows={rr.results
                 .sort((a, b) => b.final_marks.score - a.final_marks.score)
-                .map((r, index) => createData(index, r.team.name, r.team.pilots, r.final_marks.score, r.tricks, r.final_marks))}
+                .map((r, index) =>
+                  createData(index, r.team.name, r.team.pilots, r.final_marks.score, r.tricks, r.final_marks)
+                )}
               index={index + 1}
               value={value}
               handleBackButton={event => handleBackButton(event, 100)}

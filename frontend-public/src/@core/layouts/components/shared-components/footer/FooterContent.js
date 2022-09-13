@@ -10,9 +10,7 @@ const FooterContent = () => {
 
   return (
     <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-      <Typography sx={{ mr: 2 }}>
-        {`© ${new Date().getFullYear()}`}
-      </Typography>
+      <Typography sx={{ mr: 2 }}>{`© ${new Date().getFullYear()}`}</Typography>
       {hidden ? null : (
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', '& :not(:last-child)': { mr: 4 } }}>
           <Link
