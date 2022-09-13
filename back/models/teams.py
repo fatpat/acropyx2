@@ -101,7 +101,6 @@ class Team(BaseModel):
             except:
                 pass
 
-        log.debug(f"fetching team {id} from DB")
         if deleted:
             search = {"_id": id}
         else:

@@ -172,7 +172,6 @@ class Trick(BaseModel):
             except:
                 pass
 
-        log.debug(f"fetching trick {id} from DB")
         if deleted:
             search = {"$or": [{"_id": id}, {"name": id}]}
         else:

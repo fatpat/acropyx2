@@ -94,7 +94,6 @@ class Judge(BaseModel):
             except:
                 pass
 
-        log.debug(f"fetching judge {id} from DB")
         if deleted:
             search = {"_id": id}
         else:

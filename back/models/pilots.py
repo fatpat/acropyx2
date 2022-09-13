@@ -88,7 +88,6 @@ class Pilot(BaseModel):
             except:
                 pass
 
-        log.debug(f"fetching pilot {id} from DB")
         pilot = await collection.find_one({"_id": id})
 
         if pilot is None:
