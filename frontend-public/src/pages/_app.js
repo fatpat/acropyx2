@@ -52,12 +52,12 @@ const App = props => {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>{`${themeConfig.templateName} - 2022`}</title>
+        <title>{themeConfig.templateName}</title>
         <meta
           name='description'
-          content={`${themeConfig.templateName} – Material Design React Admin Dashboard Template – is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.`}
+          content={`${themeConfig.templateName} – The official website that provide live and archived results for paragliding aerobatics competitions. This site replace the former Acropyx website.`}
         />
-        <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
+        <meta name='keywords' content='paragliding, acro, aerobatics, CIVL, FAI, acropyx' />
         <meta name='viewport' content='initial-scale=1, width=device-width' />
       </Head>
 
