@@ -28,7 +28,6 @@
     "@popperjs/core": "^2.11.2",
     "apexcharts-clevision": "3.28.5",
     "axios": "^0.27.2",
-    "babel-eslint": "^10.1.0",
     "clsx": "^1.1.1",
     "countries-code": "^1.1.0",
     "mdi-material-ui": "^7.1.0",
@@ -40,7 +39,11 @@
     "react-datepicker": "^4.5.0",
     "react-dom": "17.0.2",
     "react-perfect-scrollbar": "^1.5.8",
-    "react-popper": "^2.2.5"
+    "react-popper": "^2.2.5",
+    "@mui/system": "^5.4.1",
+    "apexcharts": "^3.18.0",
+    "typescript": ">=2.8.0",
+    "@babel/core":"^7.0.0"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
