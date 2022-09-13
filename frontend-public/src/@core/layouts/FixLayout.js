@@ -47,7 +47,7 @@ const BlankLayout = ({ children }) => {
   return (
     <Container maxWidth='lg'>
       <BlankLayoutWrapper className='layout-wrapper'>
-        <Header title='Acropyx' sections={FixNavItems()} />
+        <Header title='🏆 Acro World Tour Results 🏆' sections={FixNavItems()} />
         <Box
           className='app-content'
           sx={{ minHeight: '100vh', overflowX: 'hidden', position: 'relative', padding: '10px' }}
