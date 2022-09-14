@@ -78,19 +78,20 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
     }
     if (status == 404) {
       data = {}
-      setResult({
+      result = {
         judges_mark:{}
-      })
-      setResultsOK(false)
+      }
+      resultsOK = false
     } else {
       data = retData
-      setData(data)
       result = retData.final_marks
-      setResult(result)
-      setResultsOK(true)
+      resultsOK = true
     }
     console.log("retrieved Data", data)
 
+    setData(data)
+    setResult(result)
+    setResultsOK(resultsOK)
     setTeam(team)
     setCurrentFlight(currentFlight)
     setLoading(null)
