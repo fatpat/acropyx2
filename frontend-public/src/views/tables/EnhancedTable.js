@@ -285,12 +285,12 @@ export default function EnhancedTable({ rows, headCells, orderById, actionRowId,
                 })}
               {emptyRows > 0 && (
                 <TableRow
-                  key="emptyrow"
+                  key='emptyrow'
                   style={{
                     height: (dense ? 33 : 53) * emptyRows
                   }}
                 >
-                  <TableCell colSpan={6}/>
+                  <TableCell colSpan={6} />
                 </TableRow>
               )}
             </TableBody>

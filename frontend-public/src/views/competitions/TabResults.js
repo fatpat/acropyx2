@@ -247,14 +247,17 @@ const TabResults = ({ results }) => {
         <Grid item xs={12}>
           <Box hidden={value == -99}></Box>
           <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} hidden={value != -99}>
-            <ListItemButton onClick={event => handleListItemClick(event, 0)}>
-              <ListItemAvatar>
-                <Avatar>
-                  <EmojiEventsIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary='Overall results' />
-            </ListItemButton>
+            {results.runs_results.length == 0 && 'No Results yet ...'}
+            {results.runs_results.length > 0 && (
+              <ListItemButton onClick={event => handleListItemClick(event, 0)}>
+                <ListItemAvatar>
+                  <Avatar>
+                    <EmojiEventsIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary='Overall results' />
+              </ListItemButton>
+            )}
             {results.runs_results.map((rr, index) => (
               <ListItemButton key={index} onClick={event => handleListItemClick(event, index + 1)}>
                 <ListItemAvatar>
