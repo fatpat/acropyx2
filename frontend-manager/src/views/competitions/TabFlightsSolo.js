@@ -78,7 +78,9 @@ const TabFlights = ({ comp, run, rid }) => {
         return
     }
     if (status == 404) {
-      data = {}
+      data = {
+        tricks: []
+      }
       result = {
         judges_mark:{}
       }
