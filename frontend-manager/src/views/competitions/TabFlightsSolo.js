@@ -79,6 +79,7 @@ const TabFlights = ({ comp, run, rid }) => {
     }
     if (status == 404) {
       data = {
+        marks: [],
         tricks: []
       }
       result = {

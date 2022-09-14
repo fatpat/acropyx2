@@ -78,6 +78,7 @@ const TabFlightsSynchro = ({ comp, run, rid }) => {
     }
     if (status == 404) {
       data = {
+        marks: [],
         tricks: []
       }
       result = {
