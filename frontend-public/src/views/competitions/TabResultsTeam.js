@@ -26,6 +26,9 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
+import Filter1Icon from '@mui/icons-material/Filter1'
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
+import FlightIcon from '@mui/icons-material/Flight'
 
 const CustomInput = forwardRef((props, ref) => {
   return <TextField inputRef={ref} label='Birth Date' fullWidth {...props} />
@@ -230,7 +233,7 @@ const TabResults = ({ results }) => {
             <ListItemButton onClick={event => handleListItemClick(event, 0)}>
               <ListItemAvatar>
                 <Avatar>
-                  <ImageIcon />
+                  <EmojiEventsIcon />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary='Overall results' />
@@ -239,7 +242,7 @@ const TabResults = ({ results }) => {
               <ListItemButton key={index} onClick={event => handleListItemClick(event, index + 1)}>
                 <ListItemAvatar>
                   <Avatar>
-                    <WorkIcon />
+                    <FlightIcon />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary={'Run ' + (index + 1) + ' results'} />

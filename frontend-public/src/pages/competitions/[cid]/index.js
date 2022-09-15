@@ -111,7 +111,7 @@ const CompetitionsPage = ({ data }) => {
                 label={
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <AccountOutline />
-                    <TabName>Pilots</TabName>
+                    <TabName>{data.type == 'synchro' ? "Teams" : "Pilots"}</TabName>
                   </Box>
                 }
               />

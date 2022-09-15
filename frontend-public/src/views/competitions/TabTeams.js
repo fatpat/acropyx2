@@ -40,24 +40,20 @@ const TabTeams = ({ teams }) => {
   return (
     <CardContent>
       <Grid container spacing={7}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <TableContainer component={Paper}>
             <Table aria-label='simple table'>
               <TableHead>
                 <TableRow>
-                  <TableCell>#</TableCell>
-                  <TableCell align='right'>Name</TableCell>
-                  <TableCell align='right'>Pilots</TableCell>
+                  <TableCell align='center'>Name</TableCell>
+                  <TableCell align='center'>Pilots</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {teams.map((row, index) => (
                   <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                    <TableCell component='th' scope='row'>
-                      {index + 1}
-                    </TableCell>
-                    <TableCell align='right'>{row.name}</TableCell>
-                    <TableCell align='right'>
+                    <TableCell align='center'>{row.name}</TableCell>
+                    <TableCell align='center'>
                       {row.pilots.map((p, i) => (
                         <div key={i}>{p.name}</div>
                       ))}
