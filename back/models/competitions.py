@@ -974,7 +974,7 @@ class Competition(CompetitionNew):
 
         mark.bonus = (mark.technical + mark.choreography) * mark.bonus_percentage / 100
 
-        mark.score = mark.technical + mark.choreography + mark.landing + mark.bonus
+        mark.score = mark.technical + mark.choreography + mark.landing + mark.synchro + mark.bonus
 
         # remove warning deduction points
         # 0.5 per warnings
