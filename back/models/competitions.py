@@ -799,7 +799,7 @@ class Competition(CompetitionNew):
                     break
                 r = self.runs[i]
                 for f in r.flights:
-                    if flight.pilot == f.pilot:
+                    if (self.type == CompetitionType.solo and flight.pilot == f.pilot) or (self.type == CompetitionType.synchro and flight.team == f.team):
                         previous_warnings += len(f.warnings)
                         break
 
@@ -905,7 +905,7 @@ class Competition(CompetitionNew):
                     r = self.runs[i]
                     broke = False
                     for f in r.flights:
-                        if flight.pilot != f.pilot:
+                        if (self.type == CompetitionType.solo and flight.pilot != f.pilot) or (self.type == CompetitionType.synchro and flight.team != f.team):
                             continue
                         for t in f.tricks:
                             if t.base_trick == trick.base_trick and t.uniqueness == trick.uniqueness:
