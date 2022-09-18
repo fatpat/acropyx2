@@ -354,19 +354,19 @@ async def get_all_results(id: str):
     return await res.export(cache=await UtilsCtrl.get_cache())
 
 @competitions.get(
-    "/{id}/csv_results",
+    "/{id}/export_results",
     status_code=200,
     response_description="Rietrieve the results of the competition",
     response_class=FileResponse,
 )
-async def get_csv_results(id: str, bg_tasks: BackgroundTasks):
+async def get_export_results(id: str, bg_tasks: BackgroundTasks):
     comp = await Competition.get(id)
     res = await comp.results()
     res = await res.export(cache=await UtilsCtrl.get_cache())
-    csv_file = CompCtrl.comp_to_csv(res, comp.type)
-    bg_tasks.add_task(os.remove, csv_file)
-    filename=f"{id}-results-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.csv"
-    return FileResponse(path=csv_file, filename=filename, background=bg_tasks)
+    file = CompCtrl.comp_to_xlsx(res, comp.type)
+    bg_tasks.add_task(os.remove, file)
+    filename=f"{id}-results-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.xlsx"
+    return FileResponse(path=file, filename=filename, background=bg_tasks)
 
 @competitions.get(
     "/{id}/results/{i}",

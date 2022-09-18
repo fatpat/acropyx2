@@ -70,7 +70,7 @@ const TabResults = ({ code }) => {
   return (
     <CardContent>
       <Box sx={{display: 'flex',justifyContent: 'right'}}>
-        <Button href={new URL(`/competitions/${code}/csv_results`, process.env.NEXT_PUBLIC_API_URL).toString()} startIcon={<ArticleIcon />}>Download CIVL CSV</Button>
+        <Button href={new URL(`/competitions/${code}/export_results`, process.env.NEXT_PUBLIC_API_URL).toString()} startIcon={<ArticleIcon />}>Download CIVL Export</Button>
       </Box>
       <Box sx={{display: 'flex',justifyContent: 'center'}}>
       <Typography variant="h4">
