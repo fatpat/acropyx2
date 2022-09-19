@@ -604,7 +604,7 @@ class Competition(CompetitionNew):
         await self.save()
         return mark
 
-    async def results(self) -> CompetitionResults:
+    async def results(self, limit: int = -1) -> CompetitionResults:
         final = (self.state == CompetitionState.closed)
         overall_results = []
         runs_results = []
@@ -612,6 +612,8 @@ class Competition(CompetitionNew):
         overall = {}
 
         for i, run in enumerate(self.runs):
+            if limit >= 0 and i > limit:
+                break
             run_result = await self.run_results(i, published_only=False)
             runs_results.append(run_result)
             if not run_result.final:

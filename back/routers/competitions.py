@@ -354,18 +354,22 @@ async def get_all_results(id: str):
     return await res.export(cache=await UtilsCtrl.get_cache())
 
 @competitions.get(
-    "/{id}/export_results",
+    "/{id}/results/export",
     status_code=200,
     response_description="Rietrieve the results of the competition",
     response_class=FileResponse,
+    dependencies=[Depends(auth)],
 )
-async def get_export_results(id: str, bg_tasks: BackgroundTasks):
+async def get_export_results(id: str, bg_tasks: BackgroundTasks, limit_run: int =-1):
     comp = await Competition.get(id)
-    res = await comp.results()
+    res = await comp.results(limit = limit_run)
     res = await res.export(cache=await UtilsCtrl.get_cache())
     file = CompCtrl.comp_to_xlsx(res, comp.type)
     bg_tasks.add_task(os.remove, file)
-    filename=f"{id}-results-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.xlsx"
+    filename=f"{id}-overall-results"
+    if limit_run >= 0:
+        filename += f"-after-run{limit_run}"
+    filename += f"-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.xlsx"
     return FileResponse(path=file, filename=filename, background=bg_tasks)
 
 @competitions.get(
@@ -379,3 +383,19 @@ async def run_get_results(id: str, i: int, published_only: bool = True):
     comp = await Competition.get(id)
     res = await comp.run_results(run_i=i, published_only=published_only)
     return await res.export(cache=await UtilsCtrl.get_cache())
+
+@competitions.get(
+    "/{id}/results/{i}/export",
+    status_code=200,
+    response_description="export the results of a specific run of competition",
+    response_class=FileResponse,
+    dependencies=[Depends(auth)],
+)
+async def run_get_results(id: str, i: int, bg_tasks: BackgroundTasks):
+    comp = await Competition.get(id)
+    res = await comp.run_results(run_i=i)
+    res = await res.export(cache=await UtilsCtrl.get_cache())
+    file = CompCtrl.run_to_xlsx(res, comp.type)
+    bg_tasks.add_task(os.remove, file)
+    filename=f"{id}-run{i}-results-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.xlsx"
+    return FileResponse(path=file, filename=filename, background=bg_tasks)
