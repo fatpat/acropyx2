@@ -7,6 +7,7 @@ import Grid from '@mui/material/Grid'
 import ListItem from '@mui/material/ListItem'
 import List from '@mui/material/List'
 import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import TableBody from '@mui/material/TableBody'
@@ -17,6 +18,7 @@ import Table from '@mui/material/Table'
 import TableContainer from '@mui/material/TableContainer'
 import Checkbox from '@mui/material/Checkbox'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
+import ArticleIcon from '@mui/icons-material/Article'
 
 // ** jquery
 import $ from 'jquery'
@@ -69,6 +71,10 @@ const TabResults = ({ code, rid }) => {
 
   return (
     <CardContent>
+      <Box sx={{display: 'flex',justifyContent: 'right'}}>
+        <Button href={new URL(`/competitions/${code}/results/${rid}/export`, process.env.NEXT_PUBLIC_API_URL).toString()} startIcon={<ArticleIcon />}>CIVL Run Export Run Results</Button>
+        <Button href={new URL(`/competitions/${code}/results/export?limit_run=${rid}`, process.env.NEXT_PUBLIC_API_URL).toString()} startIcon={<ArticleIcon />}>CIVL Export Overall Results after Run</Button>
+      </Box>
       <Box sx={{display: 'flex',justifyContent: 'center'}}>
       <Typography variant="h4">
         <EmojiEventsIcon fontSize="large"/>{ results.final ? 'Final' : 'Intermediate' } Run {parseInt(rid)+1} Results
