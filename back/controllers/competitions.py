@@ -45,38 +45,39 @@ class CompCtrl:
             ws.cell(column=11, row=1, value="Score")
 
         rank = 0
+        row = 1
         for res in comp.overall_results:
             rank += 1
             score = round(res.score, 3)
             if type == CompetitionType.solo:
-                ws.cell(column=1, row=rank+1, value=f"{rank}")
-                ws.cell(column=2, row=rank+1, value=f"{res.pilot.civlid}")
-                ws.cell(column=3, row=rank+1, value=res.pilot.name.split(" ", 1)[0])
-                ws.cell(column=4, row=rank+1, value=res.pilot.name.split(" ", 1)[1])
-                ws.cell(column=5, row=rank+1, value=res.pilot.country.upper())
-                ws.cell(column=6, row=rank+1, value=f"M")
-                ws.cell(column=7, row=rank+1, value=f"")
-                ws.cell(column=8, row=rank+1, value=f"")
-                ws.cell(column=9, row=rank+1, value=f"{res.pilot.civlid}")
-                ws.cell(column=10, row=rank+1, value=f"{score}")
+                row += 1
+                ws.cell(column=1, row=row, value=f"{rank}")
+                ws.cell(column=2, row=row, value=f"{res.pilot.civlid}")
+                ws.cell(column=3, row=row, value=res.pilot.name.split(" ", 1)[0])
+                ws.cell(column=4, row=row, value=res.pilot.name.split(" ", 1)[1])
+                ws.cell(column=5, row=row, value=res.pilot.country.upper())
+                ws.cell(column=6, row=row, value=f"M")
+                ws.cell(column=7, row=row, value=f"")
+                ws.cell(column=8, row=row, value=f"")
+                ws.cell(column=9, row=row, value=f"{res.pilot.civlid}")
+                ws.cell(column=10, row=row, value=f"{score}")
 
             if type == CompetitionType.synchro:
                 for i, pilot in enumerate(res.team.pilots):
-                    ws.cell(column=1, row=rank+1+i, value=f"{rank}")
-                    ws.cell(column=2, row=rank+1+i, value=f"{res.team.name}")
-                    ws.cell(column=3, row=rank+1+i, value=f"{pilot.civlid}")
-                    ws.cell(column=4, row=rank+1+i, value=pilot.name.split(" ", 1)[0])
-                    ws.cell(column=5, row=rank+1+i, value=pilot.name.split(" ", 1)[1])
-                    ws.cell(column=6, row=rank+1+i, value=pilot.country.upper())
-                    ws.cell(column=7, row=rank+1+i, value=f"M")
-                    ws.cell(column=8, row=rank+1+i, value=f"")
-                    ws.cell(column=9, row=rank+1+i, value=f"")
-                    ws.cell(column=10, row=rank+1+i, value=f"{pilot.civlid}")
-                    ws.cell(column=11, row=rank+1+i, value=f"{score}")
-                ws.merge_cells(start_row=rank+1, start_column=1, end_row=rank+2, end_column=1)
-                ws.merge_cells(start_row=rank+1, start_column=2, end_row=rank+2, end_column=2)
-
-                rank += 1
+                    row += 1
+                    ws.cell(column=1, row=row, value=f"{rank}")
+                    ws.cell(column=2, row=row, value=f"{res.team.name}")
+                    ws.cell(column=3, row=row, value=f"{pilot.civlid}")
+                    ws.cell(column=4, row=row, value=pilot.name.split(" ", 1)[0])
+                    ws.cell(column=5, row=row, value=pilot.name.split(" ", 1)[1])
+                    ws.cell(column=6, row=row, value=pilot.country.upper())
+                    ws.cell(column=7, row=row, value=f"M")
+                    ws.cell(column=8, row=row, value=f"")
+                    ws.cell(column=9, row=row, value=f"")
+                    ws.cell(column=10, row=row, value=f"{pilot.civlid}")
+                    ws.cell(column=11, row=row, value=f"{score}")
+                ws.merge_cells(start_row=row-1, start_column=1, end_row=row, end_column=1)
+                ws.merge_cells(start_row=row-1, start_column=2, end_row=row, end_column=2)
 
         with NamedTemporaryFile(suffix=".xlsx", delete=False) as xlsx:
             ret = xlsx.name
@@ -119,39 +120,40 @@ class CompCtrl:
             ws.cell(column=11, row=1, value="Score")
 
         rank = 0
+        row = 1
         run.results.sort(key=lambda e: -e.final_marks.score)
         for res in run.results:
             rank += 1
             score = round(res.final_marks.score, 3)
             if type == CompetitionType.solo:
-                ws.cell(column=1, row=rank+1, value=f"{rank}")
-                ws.cell(column=2, row=rank+1, value=f"{res.pilot.civlid}")
-                ws.cell(column=3, row=rank+1, value=res.pilot.name.split(" ", 1)[0])
-                ws.cell(column=4, row=rank+1, value=res.pilot.name.split(" ", 1)[1])
-                ws.cell(column=5, row=rank+1, value=res.pilot.country.upper())
-                ws.cell(column=6, row=rank+1, value=f"M")
-                ws.cell(column=7, row=rank+1, value=f"")
-                ws.cell(column=8, row=rank+1, value=f"")
-                ws.cell(column=9, row=rank+1, value=f"{res.pilot.civlid}")
-                ws.cell(column=10, row=rank+1, value=f"{score}")
+                row += 1
+                ws.cell(column=1, row=row, value=f"{rank}")
+                ws.cell(column=2, row=row, value=f"{res.pilot.civlid}")
+                ws.cell(column=3, row=row, value=res.pilot.name.split(" ", 1)[0])
+                ws.cell(column=4, row=row, value=res.pilot.name.split(" ", 1)[1])
+                ws.cell(column=5, row=row, value=res.pilot.country.upper())
+                ws.cell(column=6, row=row, value=f"M")
+                ws.cell(column=7, row=row, value=f"")
+                ws.cell(column=8, row=row, value=f"")
+                ws.cell(column=9, row=row, value=f"{res.pilot.civlid}")
+                ws.cell(column=10, row=row, value=f"{score}")
 
             if type == CompetitionType.synchro:
                 for i, pilot in enumerate(res.team.pilots):
-                    ws.cell(column=1, row=rank+1+i, value=f"{rank}")
-                    ws.cell(column=2, row=rank+1+i, value=f"{res.team.name}")
-                    ws.cell(column=3, row=rank+1+i, value=f"{pilot.civlid}")
-                    ws.cell(column=4, row=rank+1+i, value=pilot.name.split(" ", 1)[0])
-                    ws.cell(column=5, row=rank+1+i, value=pilot.name.split(" ", 1)[1])
-                    ws.cell(column=6, row=rank+1+i, value=pilot.country.upper())
-                    ws.cell(column=7, row=rank+1+i, value=f"M")
-                    ws.cell(column=8, row=rank+1+i, value=f"")
-                    ws.cell(column=9, row=rank+1+i, value=f"")
-                    ws.cell(column=10, row=rank+1+i, value=f"{pilot.civlid}")
-                    ws.cell(column=11, row=rank+1+i, value=f"{score}")
-                ws.merge_cells(start_row=rank+1, start_column=1, end_row=rank+2, end_column=1)
-                ws.merge_cells(start_row=rank+1, start_column=2, end_row=rank+2, end_column=2)
-
-                rank += 1
+                    row += 1
+                    ws.cell(column=1, row=row, value=f"{rank}")
+                    ws.cell(column=2, row=row, value=f"{res.team.name}")
+                    ws.cell(column=3, row=row, value=f"{pilot.civlid}")
+                    ws.cell(column=4, row=row, value=pilot.name.split(" ", 1)[0])
+                    ws.cell(column=5, row=row, value=pilot.name.split(" ", 1)[1])
+                    ws.cell(column=6, row=row, value=pilot.country.upper())
+                    ws.cell(column=7, row=row, value=f"M")
+                    ws.cell(column=8, row=row, value=f"")
+                    ws.cell(column=9, row=row, value=f"")
+                    ws.cell(column=10, row=row, value=f"{pilot.civlid}")
+                    ws.cell(column=11, row=row, value=f"{score}")
+                ws.merge_cells(start_row=row-1, start_column=1, end_row=row, end_column=1)
+                ws.merge_cells(start_row=row-1, start_column=2, end_row=row, end_column=2)
 
         with NamedTemporaryFile(suffix=".xlsx", delete=False) as xlsx:
             ret = xlsx.name
