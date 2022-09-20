@@ -52,15 +52,127 @@ import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import { createUseGridApiEventHandler } from '@mui/x-data-grid'
 import { InboxRemoveOutline } from 'mdi-material-ui'
 
+// ** local imports
+import { ordinal_suffix } from 'src/util/ordinal_suffix'
+
 const CustomInput = forwardRef((props, ref) => {
   return <TextField inputRef={ref} label='Birth Date' fullWidth {...props} />
 })
 
-function createData(rank, name, score, tricks, finalMarks) {
-  return { rank, name, score, tricks, finalMarks }
+function TabPanelOverall(props) {
+  const { children, value, index, rows, handleBackButton, ...other } = props
+  const [selectedPilotIndex, setSelectedPilotIndex] = useState(0)
+  const [displayPilotResume, setDisplayPilotResume] = useState(false)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (router.query.p) {
+      setSelectedPilotIndex(router.query.p)
+      setDisplayPilotResume(true)
+    } else {
+      setSelectedPilotIndex(0)
+      setDisplayPilotResume(false)
+    }
+  }, [router])
+
+  const handlePilot = (event, index) => {
+    if (rows[index].tricks) {
+      setSelectedPilotIndex(index)
+      setDisplayPilotResume(true)
+      router.push(
+        {
+          query: { r: router.query.r, tab: router.query.tab, p: index, cid: router.query.cid }
+        },
+        undefined,
+        { shallow: true }
+      )
+    }
+  }
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue)
+  }
+
+  const hiddenPilotResume = (event, index) => {
+    setDisplayPilotResume(false)
+    router.push(
+      {
+        query: { r: router.query.r, tab: router.query.tab, cid: router.query.cid }
+      },
+      undefined,
+      { shallow: true }
+    )
+  }
+
+  return (
+    <div
+      role='tabpanel'
+      hidden={value !== index}
+      id={`vertical-tabpanel-${index}`}
+      aria-labelledby={`vertical-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <TableContainer component={Paper} hidden={displayPilotResume}>
+            <IconButton aria-label='delete' onClick={event => handleBackButton(event, 0)}>
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography>{children}</Typography>
+            <Table aria-label='simple table'>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Rank</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Runs Results</TableCell>
+                  <TableCell>Score</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row, index) => (
+                  <TableRow
+                    hover
+                    key={index}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    onClick={event => handlePilot(event, index)}
+                  >
+                    <TableCell component='th' scope='row'>
+                      {ordinal_suffix(index + 1)}
+                    </TableCell>
+                    <TableCell component='th'>{row.pilot.name}</TableCell>
+                    <TableCell>
+                      <Table aria-label='simple table'>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Run</TableCell>
+                            <TableCell>Rank</TableCell>
+                            <TableCell>Score</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {row.result_per_run.map((rr, index) => (
+                            <TableRow>
+                              <TableCell>{index+1}</TableCell>
+                              <TableCell>{ordinal_suffix(rr.rank)}</TableCell>
+                              <TableCell>{rr.score}</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableCell>
+                    <TableCell component="th">{row.score.toLocaleString('en-US')}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      )}
+    </div>
+  )
 }
 
-function TabPanel(props) {
+function TabPanelRun(props) {
   const { children, value, index, rows, handleBackButton, ...other } = props
   const [selectedPilotIndex, setSelectedPilotIndex] = useState(0)
   const [displayPilotResume, setDisplayPilotResume] = useState(false)
@@ -139,8 +251,8 @@ function TabPanel(props) {
                     <TableCell component='th' scope='row'>
                       {index + 1}
                     </TableCell>
-                    <TableCell align='right'>{row.name}</TableCell>
-                    <TableCell align='right'>{row.score.toLocaleString('en-US')}</TableCell>
+                    <TableCell align='right'>{row.pilot.name}</TableCell>
+                    <TableCell align='right'>{row.final_marks?.score.toLocaleString('en-US')}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -153,7 +265,7 @@ function TabPanel(props) {
                 <ArrowBackIcon />
               </IconButton>
               <Typography>
-                {children} - {rows[selectedPilotIndex].name}
+                {children} - {rows[selectedPilotIndex].pilot.name}
               </Typography>
               <Typography variant='span' gutterBottom component='div'>
                 Tricks:
@@ -173,18 +285,18 @@ function TabPanel(props) {
                 Final Marks:
               </Typography>
               <ul>
-                <li>Technicity: {rows[selectedPilotIndex].finalMarks?.technicity}</li>
-                <li>Bonus percentage: {rows[selectedPilotIndex].finalMarks?.bonus_percentage}</li>
-                <li>Technical: {rows[selectedPilotIndex].finalMarks?.technical}</li>
-                <li>Choreography: {rows[selectedPilotIndex].finalMarks?.choreography}</li>
-                <li>Landing: {rows[selectedPilotIndex].finalMarks?.landing}</li>
-                <li>Bonus: {rows[selectedPilotIndex].finalMarks?.bonus}</li>
-                <li>Malus: {rows[selectedPilotIndex].finalMarks?.malus}</li>
-                <li>Score: {rows[selectedPilotIndex].finalMarks?.score}</li>
+                <li>Technicity: {rows[selectedPilotIndex].final_marks?.technicity}</li>
+                <li>Bonus percentage: {rows[selectedPilotIndex].final_marks?.bonus_percentage}</li>
+                <li>Technical: {rows[selectedPilotIndex].final_marks?.technical}</li>
+                <li>Choreography: {rows[selectedPilotIndex].final_marks?.choreography}</li>
+                <li>Landing: {rows[selectedPilotIndex].final_marks?.landing}</li>
+                <li>Bonus: {rows[selectedPilotIndex].final_marks?.bonus}</li>
+                <li>Malus: {rows[selectedPilotIndex].final_marks?.malus}</li>
+                <li>Score: {rows[selectedPilotIndex].final_marks?.score}</li>
                 <li>
                   Warnings:
                   <ul>
-                    {rows[selectedPilotIndex].finalMarks?.warnings.map((w, i) => (
+                    {rows[selectedPilotIndex].final_marks?.warnings.map((w, i) => (
                       <li key={i}>w</li>
                     ))}
                   </ul>
@@ -206,7 +318,6 @@ const TabResults = ({ results }) => {
   const router = useRouter()
 
   useEffect(() => {
-    console.log('r:' + router.query.r)
     if (router.query.r) {
       setSelectedIndex(parseInt(router.query.r))
       setValue(parseInt(router.query.r))
@@ -216,10 +327,9 @@ const TabResults = ({ results }) => {
     }
   }, [router])
 
-  const handleListItemClick = (event, index) => {
+  const routeToResult = (event, index) => {
     setSelectedIndex(index)
     setValue(index)
-    console.log(value)
     router.push(
       {
         query: { r: index, tab: router.query.tab, cid: router.query.cid }
@@ -230,7 +340,6 @@ const TabResults = ({ results }) => {
   }
 
   const handleBackButton = (event, index) => {
-    console.log('back')
     setValue(-99)
     router.push(
       {
@@ -241,6 +350,7 @@ const TabResults = ({ results }) => {
     )
   }
 
+  console.log('results', results)
   return (
     <CardContent>
       <Grid container spacing={2}>
@@ -249,7 +359,7 @@ const TabResults = ({ results }) => {
           <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} hidden={value != -99}>
             {results.runs_results.length == 0 && 'No Results yet ...'}
             {results.runs_results.length > 0 && (
-              <ListItemButton onClick={event => handleListItemClick(event, 0)}>
+              <ListItemButton onClick={event => routeToResult(event, 0)}>
                 <ListItemAvatar>
                   <Avatar>
                     <EmojiEventsIcon />
@@ -259,7 +369,7 @@ const TabResults = ({ results }) => {
               </ListItemButton>
             )}
             {results.runs_results.map((rr, index) => (
-              <ListItemButton key={index} onClick={event => handleListItemClick(event, index + 1)}>
+              <ListItemButton key={index} onClick={event => routeToResult(event, index + 1)}>
                 <ListItemAvatar>
                   <Avatar>
                     <FlightIcon />
@@ -269,28 +379,24 @@ const TabResults = ({ results }) => {
               </ListItemButton>
             ))}
           </List>
-          <TabPanel
-            rows={results.overall_results
-              .sort((a, b) => b.score - a.score)
-              .map((r, index) => createData(index, r.pilot.name, r.score))}
+          <TabPanelOverall
+            rows={results.overall_results.sort((a, b) => b.score - a.score)}
             index={0}
             value={value}
             handleBackButton={event => handleBackButton(event, 100)}
           >
             Overall results
-          </TabPanel>
+          </TabPanelOverall>
           {results.runs_results.map((rr, index) => (
-            <TabPanel
+            <TabPanelRun
               key={index + 1}
-              rows={rr.results
-                .sort((a, b) => b.final_marks.score - a.final_marks.score)
-                .map((r, index) => createData(index, r.pilot.name, r.final_marks.score, r.tricks, r.final_marks))}
+              rows={rr.results.sort((a, b) => b.final_marks.score - a.final_marks.score)}
               index={index + 1}
               value={value}
               handleBackButton={event => handleBackButton(event, 100)}
             >
               Run {index + 1} results
-            </TabPanel>
+            </TabPanelRun>
           ))}
         </Grid>
       </Grid>
