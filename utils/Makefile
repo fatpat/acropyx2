@@ -1,3 +1,4 @@
+SHELL := /bin/bash
 include ../mongo.pass.env
 COLLECTIONS=pilots teams judges tricks competitions
 BACKUP_DIR=mongo.backup.$(shell date +'%Y%m%d-%H%M')
