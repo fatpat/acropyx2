@@ -83,6 +83,7 @@ const Dashboard = ({ data }) => {
         </Grid>
       </Grid>
     </ApexChartWrapper>
+
   )
 }
 
