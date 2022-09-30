@@ -151,7 +151,7 @@ function TabPanelOverall(props) {
                         </TableHead>
                         <TableBody>
                           {row.result_per_run.map((rr, index) => (
-                            <TableRow>
+                            <TableRow key={index}>
                               <TableCell>{index+1}</TableCell>
                               <TableCell>{ordinal_suffix(rr.rank)}</TableCell>
                               <TableCell>{rr.score}</TableCell>
