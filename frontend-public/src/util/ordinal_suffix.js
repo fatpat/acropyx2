@@ -10,5 +10,6 @@ export function ordinal_suffix(i) {
     if (j == 3 && k != 13) {
         return i + "rd";
     }
+
     return i + "th";
 }

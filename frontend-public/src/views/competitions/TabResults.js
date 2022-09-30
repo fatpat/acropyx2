@@ -350,7 +350,6 @@ const TabResults = ({ results }) => {
     )
   }
 
-  console.log('results', results)
   return (
     <CardContent>
       <Grid container spacing={2}>
