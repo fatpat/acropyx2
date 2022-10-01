@@ -360,7 +360,7 @@ async def get_all_results(id: str):
     status_code=200,
     response_description="Rietrieve the results of the competition",
     response_class=FileResponse,
-    dependencies=[Depends(auth)],
+#    dependencies=[Depends(auth)],
 )
 async def get_export_results(request: Request, id: str, bg_tasks: BackgroundTasks, limit_run: int =-1, filetype: str = "xls"):
     comp = await Competition.get(id)
@@ -396,7 +396,7 @@ async def run_get_results(id: str, i: int, published_only: bool = True):
     status_code=200,
     response_description="export the results of a specific run of competition",
     response_class=FileResponse,
-    dependencies=[Depends(auth)],
+#    dependencies=[Depends(auth)],
 )
 async def run_get_results(request: Request, id: str, i: int, bg_tasks: BackgroundTasks, filetype: str = "xls"):
     comp = await Competition.get(id)
