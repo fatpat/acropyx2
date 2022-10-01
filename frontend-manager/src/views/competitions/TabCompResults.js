@@ -17,6 +17,7 @@ import Table from '@mui/material/Table'
 import TableContainer from '@mui/material/TableContainer'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 import ArticleIcon from '@mui/icons-material/Article'
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload'
 
 // ** jquery
 import $ from 'jquery'
@@ -71,6 +72,7 @@ const TabResults = ({ code }) => {
     <CardContent>
       <Box sx={{display: 'flex',justifyContent: 'right'}}>
         <Button href={new URL(`/competitions/${code}/results/export`, process.env.NEXT_PUBLIC_API_URL).toString()} startIcon={<ArticleIcon />}>Download CIVL Export</Button>
+        <Button href={new URL(`/competitions/${code}/results/export?filetype=html`, process.env.NEXT_PUBLIC_API_URL).toString()} startIcon={<CloudDownloadIcon />} target="_blank" rel="noreferrer">PDF Export</Button>
       </Box>
       <Box sx={{display: 'flex',justifyContent: 'center'}}>
       <Typography variant="h4">

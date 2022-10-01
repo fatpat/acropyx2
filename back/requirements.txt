@@ -32,3 +32,4 @@ python-jose[cryptography]
 pytest
 requests
 fastapi-cache2
+jinja2

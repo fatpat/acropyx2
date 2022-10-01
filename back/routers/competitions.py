@@ -5,6 +5,7 @@ from http import HTTPStatus
 from fastapi import APIRouter, Depends, Body, HTTPException, Request, BackgroundTasks
 from typing import List
 from fastapi.responses import Response, HTMLResponse, FileResponse
+from fastapi.templating import Jinja2Templates
 
 from core.security import auth
 
@@ -19,6 +20,7 @@ from controllers.utils import UtilsCtrl
 
 log = logging.getLogger(__name__)
 competitions = APIRouter()
+templates = Jinja2Templates(directory="templates")
 
 #
 # Get all competitions
@@ -360,11 +362,16 @@ async def get_all_results(id: str):
     response_class=FileResponse,
     dependencies=[Depends(auth)],
 )
-async def get_export_results(id: str, bg_tasks: BackgroundTasks, limit_run: int =-1):
+async def get_export_results(request: Request, id: str, bg_tasks: BackgroundTasks, limit_run: int =-1, filetype: str = "xls"):
     comp = await Competition.get(id)
     res = await comp.results(limit = limit_run)
     res = await res.export(cache=await UtilsCtrl.get_cache())
-    file = CompCtrl.comp_to_xlsx(res, comp.type)
+    if filetype == "xls":
+        file = CompCtrl.comp_to_xlsx(res, comp.type)
+    elif filetype == "html":
+        return templates.TemplateResponse("comp_results.html", {"request": request, "results":res, "comp":comp, "limit_run":limit_run})
+    else:
+        raise HTTPException(status_code=400, detail="wrong file type, must be xls or html")
     bg_tasks.add_task(os.remove, file)
     filename=f"{id}-overall-results"
     if limit_run >= 0:
@@ -391,11 +398,17 @@ async def run_get_results(id: str, i: int, published_only: bool = True):
     response_class=FileResponse,
     dependencies=[Depends(auth)],
 )
-async def run_get_results(id: str, i: int, bg_tasks: BackgroundTasks):
+async def run_get_results(request: Request, id: str, i: int, bg_tasks: BackgroundTasks, filetype: str = "xls"):
     comp = await Competition.get(id)
     res = await comp.run_results(run_i=i)
     res = await res.export(cache=await UtilsCtrl.get_cache())
-    file = CompCtrl.run_to_xlsx(res, comp.type)
+    if filetype == "xls":
+        file = CompCtrl.run_to_xlsx(res, comp.type)
+    elif filetype == "html":
+        res.results.sort(key=lambda e: -e.final_marks.score)
+        return templates.TemplateResponse("run_results.html", {"request": request, "results":res, "comp":comp, "rid": i})
+    else:
+        raise HTTPException(status_code=400, detail="wrong file type, must be xls or html")
     bg_tasks.add_task(os.remove, file)
     filename=f"{id}-run{i}-results-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.xlsx"
     return FileResponse(path=file, filename=filename, background=bg_tasks)

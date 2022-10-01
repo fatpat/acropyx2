@@ -19,6 +19,7 @@ import TableContainer from '@mui/material/TableContainer'
 import Checkbox from '@mui/material/Checkbox'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 import ArticleIcon from '@mui/icons-material/Article'
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload'
 
 // ** jquery
 import $ from 'jquery'
@@ -74,6 +75,8 @@ const TabResults = ({ code, rid }) => {
       <Box sx={{display: 'flex',justifyContent: 'right'}}>
         <Button href={new URL(`/competitions/${code}/results/${rid}/export`, process.env.NEXT_PUBLIC_API_URL).toString()} startIcon={<ArticleIcon />}>CIVL Run Export Run Results</Button>
         <Button href={new URL(`/competitions/${code}/results/export?limit_run=${rid}`, process.env.NEXT_PUBLIC_API_URL).toString()} startIcon={<ArticleIcon />}>CIVL Export Overall Results after Run</Button>
+        <Button href={new URL(`/competitions/${code}/results/${rid}/export?filetype=html`, process.env.NEXT_PUBLIC_API_URL).toString()} startIcon={<CloudDownloadIcon />} target="_blank" rel="noreferrer">PDF Run Results</Button>
+        <Button href={new URL(`/competitions/${code}/results/export?limit_run=${rid}&filetype=html`, process.env.NEXT_PUBLIC_API_URL).toString()} startIcon={<CloudDownloadIcon />} target="_blank" rel="noreferrer">PDF Overall Results after Run</Button>
       </Box>
       <Box sx={{display: 'flex',justifyContent: 'center'}}>
       <Typography variant="h4">
