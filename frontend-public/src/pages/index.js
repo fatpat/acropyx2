@@ -1,4 +1,5 @@
 // ** MUI Imports
+import Link from '@mui/material/Link'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
@@ -57,54 +58,61 @@ function createData(id, name, type, location, start_date, pilots_or_teams) {
 const Dashboard = ({ data }) => {
   return (
     <ApexChartWrapper>
-      <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <Card>
-            <Typography variant='h5' style={{'text-align':'center'}}>On-Going competitions</Typography>
-            <EnhancedTable
-              rows={data.open.map(p =>
-                createData(
-                  p.code,
-                  p.name,
-                  p.type,
-                  p.location,
-                  p.start_date,
-                  p.type == 'solo' ? p.number_of_pilots : p.number_of_teams
-                )
-              )}
-              headCells={headCells}
-              orderById='start_date'
-              defaultOrder='desc'
-              defaultRowsPerPage='25'
-              pagination={false}
-            />
-          </Card>
+      {data.open.length + data.init.length == 0 &&
+        <Typography variant='h5' style={{'text-align':'center'}}>No active competitions, please see <Link href="/competitions">old competitions</Link>.</Typography>
+      }
+      {data.open.length > 0 &&
+        <Grid container spacing={6}>
+          <Grid item xs={12}>
+            <Card>
+              <Typography variant='h5' style={{'text-align':'center'}}>On-Going competitions</Typography>
+              <EnhancedTable
+                rows={data.open.map(p =>
+                  createData(
+                    p.code,
+                    p.name,
+                    p.type,
+                    p.location,
+                    p.start_date,
+                    p.type == 'solo' ? p.number_of_pilots : p.number_of_teams
+                  )
+                )}
+                headCells={headCells}
+                orderById='start_date'
+                defaultOrder='desc'
+                defaultRowsPerPage='25'
+                pagination={false}
+              />
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <Card>
-            <Typography variant='h5' style={{'text-align':'center'}}>Upcoming competitions</Typography>
-            <EnhancedTable
-              rows={data.init.map(p =>
-                createData(
-                  p.code,
-                  p.name,
-                  p.type,
-                  p.location,
-                  p.start_date,
-                  p.type == 'solo' ? p.number_of_pilots : p.number_of_teams
-                )
-              )}
-              headCells={headCells}
-              orderById='start_date'
-              defaultOrder='desc'
-              defaultRowsPerPage='25'
-              pagination={false}
-            />
-          </Card>
+      }
+      {data.init.length > 0 &&
+        <Grid container spacing={6}>
+          <Grid item xs={12}>
+            <Card>
+              <Typography variant='h5' style={{'text-align':'center'}}>Upcoming competitions</Typography>
+              <EnhancedTable
+                rows={data.init.map(p =>
+                  createData(
+                    p.code,
+                    p.name,
+                    p.type,
+                    p.location,
+                    p.start_date,
+                    p.type == 'solo' ? p.number_of_pilots : p.number_of_teams
+                  )
+                )}
+                headCells={headCells}
+                orderById='start_date'
+                defaultOrder='desc'
+                defaultRowsPerPage='25'
+                pagination={false}
+              />
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
+      }
     </ApexChartWrapper>
 
   )
