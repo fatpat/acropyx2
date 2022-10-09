@@ -142,7 +142,17 @@ function TabPanelOverall(props) {
                     <TableCell component='th' scope='row'>
                       {ordinal_suffix(index + 1)}
                     </TableCell>
-                    <TableCell component='th'>{row.pilot.name}</TableCell>
+                    <TableCell component='th'>
+                      <Avatar
+                        src={row.pilot.photo}
+                        sx={{
+                          width: '2.5em',
+                          height: '2.5em',
+                          border: theme => `0.25rem solid ${theme.palette.common.white}`
+                        }}
+                      />
+                      {row.pilot.name}
+                    </TableCell>
                     <TableCell>
                       <Table aria-label='simple table'>
                         <TableBody>
@@ -252,9 +262,19 @@ function TabPanelRun(props) {
                     onClick={event => handlePilot(event, index)}
                   >
                     <TableCell component='th' scope='row'>
-                      {index + 1}
+                      {ordinal_suffix(index + 1)}
                     </TableCell>
-                    <TableCell>{row.pilot.name}</TableCell>
+                    <TableCell>
+                      <Avatar
+                        src={row.pilot.photo}
+                        sx={{
+                          width: '2.5em',
+                          height: '2.5em',
+                          border: theme => `0.25rem solid ${theme.palette.common.white}`
+                        }}
+                      />
+                      {row.pilot.name}
+                    </TableCell>
                     <TableCell>{row.final_marks?.score.toFixed(3).toLocaleString('en-US')}</TableCell>
                   </TableRow>
                 ))}
@@ -270,6 +290,14 @@ function TabPanelRun(props) {
                 </IconButton>
                 {children} for {rows[selectedPilotIndex].pilot.name}
               </Typography>
+              <Avatar
+                src={rows[selectedPilotIndex].pilot.photo}
+                sx={{
+                  width: '5em',
+                  height: '5em',
+                  border: theme => `0.25rem solid ${theme.palette.common.white}`
+                }}
+              />
 
               <ul hidden={!rows[selectedPilotIndex].did_not_start}>
                 <li>Pilot <b>D</b>id <b>N</b>ot <b>S</b>tart</li>
