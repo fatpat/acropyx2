@@ -455,7 +455,7 @@ const TabResultsTeam = ({ results }) => {
                 <ListItemText primary='Overall results' />
               </ListItemButton>
             )}
-            {results.runs_results.map((rr, index) => (
+            {results.runs_results.filter(r => r.results.length > 0).map((rr, index) => (
               <ListItemButton key={index} onClick={event => routeToResult(event, index + 1)}>
                 <ListItemAvatar>
                   <Avatar>
