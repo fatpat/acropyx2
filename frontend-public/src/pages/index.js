@@ -60,7 +60,7 @@ const Dashboard = ({ data }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <Typography variant='h5'>On-Going competitions</Typography>
+            <Typography variant='h5' style={{'text-align':'center'}}>On-Going competitions</Typography>
             <EnhancedTable
               rows={data.open.map(p =>
                 createData(
@@ -84,7 +84,7 @@ const Dashboard = ({ data }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <Typography variant='h5'>Upcoming competitions</Typography>
+            <Typography variant='h5' style={{'text-align':'center'}}>Upcoming competitions</Typography>
             <EnhancedTable
               rows={data.init.map(p =>
                 createData(
