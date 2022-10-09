@@ -18,16 +18,16 @@ const headCells = [
     label: 'Name'
   },
   {
+    id: 'type',
+    numeric: false,
+    disablePadding: false,
+    label: 'Type'
+  },
+  {
     id: 'location',
     numeric: false,
     disablePadding: false,
     label: 'Location'
-  },
-  {
-    id: 'state',
-    numeric: false,
-    disablePadding: false,
-    label: 'State'
   },
   {
     id: 'start_date',
@@ -43,12 +43,12 @@ const headCells = [
   }
 ]
 
-function createData(id, name, location, state, start_date, pilots_or_teams) {
+function createData(id, name, type, location, start_date, pilots_or_teams) {
   return {
     id,
     name,
+    type,
     location,
-    state,
     start_date,
     pilots_or_teams
   }
@@ -59,17 +59,15 @@ const Dashboard = ({ data }) => {
     <ApexChartWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12}>
-          <Typography variant='h5'>Open competitions</Typography>
-        </Grid>
-        <Grid item xs={12}>
           <Card>
+            <Typography variant='h5'>On-Going competitions</Typography>
             <EnhancedTable
-              rows={data.map(p =>
+              rows={data.open.map(p =>
                 createData(
                   p.code,
                   p.name,
+                  p.type,
                   p.location,
-                  p.state,
                   p.start_date,
                   p.type == 'solo' ? p.number_of_pilots : p.number_of_teams
                 )
@@ -78,6 +76,31 @@ const Dashboard = ({ data }) => {
               orderById='start_date'
               defaultOrder='desc'
               defaultRowsPerPage='25'
+              pagination={false}
+            />
+          </Card>
+        </Grid>
+      </Grid>
+      <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <Card>
+            <Typography variant='h5'>Upcoming competitions</Typography>
+            <EnhancedTable
+              rows={data.init.map(p =>
+                createData(
+                  p.code,
+                  p.name,
+                  p.type,
+                  p.location,
+                  p.start_date,
+                  p.type == 'solo' ? p.number_of_pilots : p.number_of_teams
+                )
+              )}
+              headCells={headCells}
+              orderById='start_date'
+              defaultOrder='desc'
+              defaultRowsPerPage='25'
+              pagination={false}
             />
           </Card>
         </Grid>
@@ -91,7 +114,10 @@ const Dashboard = ({ data }) => {
 export async function getStaticProps() {
   let data = await get('/public/competitions/')
 
-  data = data.filter(c => c.state === 'open')
+  data = {
+    open: data.filter(c => c.state === 'open'),
+    init: data.filter(c => c.state === 'init'),
+  }
 
   // Pass data to the page via props
   return { props: { data }, revalidate: parseInt(process.env.NEXT_CACHE_DURATION) }

@@ -142,13 +142,13 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired
 }
 
-export default function EnhancedTable({ rows, headCells, orderById, actionRowId, defaultOrder, defaultRowsPerPage }) {
+export default function EnhancedTable({ rows, headCells, orderById, actionRowId, defaultOrder, defaultRowsPerPage, pagination }) {
   const [order, setOrder] = React.useState(defaultOrder ?? 'asc')
   const [orderBy, setOrderBy] = React.useState(orderById)
   const [selected, setSelected] = React.useState([])
   const [page, setPage] = React.useState(0)
   const [dense, setDense] = React.useState(false)
-  const [rowsPerPage, setRowsPerPage] = React.useState(parseInt(defaultRowsPerPage) ?? 5)
+  const [rowsPerPage, setRowsPerPage] = React.useState((Boolean(pagination) || isNaN(pagination)) ? (parseInt(defaultRowsPerPage) ?? 5) : 99999999)
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc'
@@ -296,15 +296,17 @@ export default function EnhancedTable({ rows, headCells, orderById, actionRowId,
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component='div'
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        { (Boolean(pagination) || isNaN(pagination)) && (
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component='div'
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        )}
       </Paper>
     </Box>
   )

@@ -18,16 +18,16 @@ const headCells = [
     label: 'Name'
   },
   {
+    id: 'type',
+    numeric: false,
+    disablePadding: false,
+    label: 'Type'
+  },
+  {
     id: 'location',
     numeric: false,
     disablePadding: false,
     label: 'Location'
-  },
-  {
-    id: 'state',
-    numeric: false,
-    disablePadding: false,
-    label: 'State'
   },
   {
     id: 'start_date',
@@ -43,12 +43,12 @@ const headCells = [
   }
 ]
 
-function createData(id, name, location, state, start_date, pilots_or_teams) {
+function createData(id, name, type, location, start_date, pilots_or_teams) {
   return {
     id,
     name,
+    type,
     location,
-    state,
     start_date,
     pilots_or_teams
   }
@@ -59,28 +59,32 @@ const Dashboard = ({ data }) => {
     <ApexChartWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12}>
-          <Typography variant='h5'>All competitions</Typography>
+          <Typography variant='h5'>Archived competitions</Typography>
         </Grid>
-        <Grid item xs={12}>
-          <Card>
-            <EnhancedTable
-              rows={data.map(p =>
-                createData(
-                  p.code,
-                  p.name,
-                  p.location,
-                  p.state,
-                  p.start_date,
-                  p.type == 'solo' ? p.number_of_pilots : p.number_of_teams
-                )
-              )}
-              headCells={headCells}
-              orderById='start_date'
-              defaultOrder='desc'
-              defaultRowsPerPage='25'
-            />
-          </Card>
-        </Grid>
+        {Object.keys(data).sort().reverse().map(year => (
+          <Grid item xs={12}>
+            <Card>
+              <Typography variant='h5' style={{'text-align':'center'}}>{year}</Typography>
+              <EnhancedTable
+                rows={data[year].map(p =>
+                  createData(
+                    p.code,
+                    p.name,
+                    p.type,
+                    p.location,
+                    p.start_date,
+                    p.type == 'solo' ? p.number_of_pilots : p.number_of_teams
+                  )
+                )}
+                headCells={headCells}
+                orderById='start_date'
+                defaultOrder='desc'
+                defaultRowsPerPage='2'
+                pagination={false}
+              />
+            </Card>
+          </Grid>
+        ))}
       </Grid>
     </ApexChartWrapper>
   )
@@ -89,6 +93,15 @@ const Dashboard = ({ data }) => {
 // This gets called on every request
 export async function getStaticProps() {
   let data = await get('/public/competitions/')
+
+  data = data.filter(c => c.state === 'closed')
+
+  let years = [...new Set(data.map(c => (new Date(c.start_date)).getFullYear()))]
+  let d = {}
+  for (const i in years) {
+    d[years[i]] = data.filter(c => (new Date(c.start_date)).getFullYear() === years[i])
+  }
+  data = d
 
   // Pass data to the page via props
   return { props: { data }, revalidate: parseInt(process.env.NEXT_CACHE_DURATION) }

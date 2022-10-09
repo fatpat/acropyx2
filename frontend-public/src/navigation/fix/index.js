@@ -1,7 +1,7 @@
 const navigation = () => {
   return [
     {
-      title: 'Accueil',
+      title: 'Home',
       path: '/'
     },
     {
@@ -9,7 +9,7 @@ const navigation = () => {
       path: '/pilots'
     },
     {
-      title: 'Competitions',
+      title: 'Archived Competitions',
       path: '/competitions'
     }
   ]
