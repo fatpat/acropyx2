@@ -128,7 +128,8 @@ function TabPanelOverall(props) {
                 <TableRow>
                   <TableCell>Rank</TableCell>
                   <TableCell>Name</TableCell>
-                  <TableCell>Runs Results</TableCell>
+                  <TableCell colSpan={2}>Pilots</TableCell>
+                  <TableCell align="center">Runs Results</TableCell>
                   <TableCell>Score</TableCell>
                 </TableRow>
               </TableHead>
@@ -142,14 +143,7 @@ function TabPanelOverall(props) {
                     <TableCell component='th' scope='row'>
                       {ordinal_suffix(index + 1)}
                     </TableCell>
-                    <TableCell component='th'>
-                      <Table sx={{'td, th': {border: 0}}}>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell align="center" colSPan={2}>{row.team.name}</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableRow>
+                    <TableCell component='th'>{row.team.name}</TableCell>
                           <TableCell>
                             <Avatar
                               src={row.team.pilots[0].photo}
@@ -158,6 +152,7 @@ function TabPanelOverall(props) {
                                 height: '2.5em',
                               }}
                             />
+                            {row.team.pilots[0].name}
                           </TableCell>
                           <TableCell>
                             <Avatar
@@ -167,14 +162,8 @@ function TabPanelOverall(props) {
                                 height: '2.5em',
                               }}
                             />
+                            {row.team.pilots[1].name}
                           </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>{row.team.pilots[0].name}</TableCell>
-                          <TableCell>{row.team.pilots[1].name}</TableCell>
-                        </TableRow>
-                      </Table>
-                    </TableCell>
                     <TableCell>
                       <Table aria-label='simple table'>
                         <TableBody>
@@ -272,6 +261,7 @@ function TabPanelRun(props) {
                 <TableRow>
                   <TableCell>Rank</TableCell>
                   <TableCell>Name</TableCell>
+                  <TableCell colSpan={2}>Pilots</TableCell>
                   <TableCell>Score</TableCell>
                 </TableRow>
               </TableHead>
@@ -285,8 +275,26 @@ function TabPanelRun(props) {
                     <TableCell component='th' scope='row'>
                       {ordinal_suffix(index + 1)}
                     </TableCell>
+                    <TableCell>{row.team.name}</TableCell>
                     <TableCell>
-                      {row.team.name}
+                            <Avatar
+                              src={row.team.pilots[0].photo}
+                              sx={{
+                                width: '2.5em',
+                                height: '2.5em',
+                              }}
+                            />
+                          {row.team.pilots[0].name}
+                    </TableCell>
+                    <TableCell>
+                            <Avatar
+                              src={row.team.pilots[1].photo}
+                              sx={{
+                                width: '2.5em',
+                                height: '2.5em',
+                              }}
+                            />
+                          {row.team.pilots[1].name}
                     </TableCell>
                     <TableCell>{row.final_marks?.score.toFixed(3).toLocaleString('en-US')}</TableCell>
                   </TableRow>
