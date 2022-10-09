@@ -126,7 +126,7 @@ function TabPanelOverall(props) {
               <TableHead>
                 <TableRow>
                   <TableCell>Rank</TableCell>
-                  <TableCell>Name</TableCell>
+                  <TableCell>Pilot</TableCell>
                   <TableCell>Runs Results</TableCell>
                   <TableCell>Score</TableCell>
                 </TableRow>
@@ -148,7 +148,6 @@ function TabPanelOverall(props) {
                         sx={{
                           width: '2.5em',
                           height: '2.5em',
-                          border: theme => `0.25rem solid ${theme.palette.common.white}`
                         }}
                       />
                       {row.pilot.name}
@@ -249,7 +248,7 @@ function TabPanelRun(props) {
               <TableHead>
                 <TableRow>
                   <TableCell>Rank</TableCell>
-                  <TableCell>Name</TableCell>
+                  <TableCell>Pilot</TableCell>
                   <TableCell>Score</TableCell>
                 </TableRow>
               </TableHead>
@@ -270,7 +269,6 @@ function TabPanelRun(props) {
                         sx={{
                           width: '2.5em',
                           height: '2.5em',
-                          border: theme => `0.25rem solid ${theme.palette.common.white}`
                         }}
                       />
                       {row.pilot.name}
@@ -295,7 +293,6 @@ function TabPanelRun(props) {
                 sx={{
                   width: '5em',
                   height: '5em',
-                  border: theme => `0.25rem solid ${theme.palette.common.white}`
                 }}
               />
 

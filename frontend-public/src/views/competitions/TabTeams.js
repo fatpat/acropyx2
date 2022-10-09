@@ -22,6 +22,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
+import Avatar from '@mui/material/Avatar'
 
 // ** Third Party Imports
 import DatePicker from 'react-datepicker'
@@ -52,10 +53,19 @@ const TabTeams = ({ teams }) => {
               <TableBody>
                 {teams.map((row, index) => (
                   <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                    <TableCell align='center'>{row.name}</TableCell>
+                    <TableCell align='center'><b>{row.name}</b></TableCell>
                     <TableCell align='center'>
                       {row.pilots.map((p, i) => (
-                        <div key={i}>{p.name}</div>
+                        <div key={i} align="center">
+                          <Avatar
+                            src={p.photo}
+                            sx={{
+                              width: '2.5em',
+                              height: '2.5em',
+                            }}
+                          />
+                          {p.name}
+                        </div>
                       ))}
                     </TableCell>
                   </TableRow>
