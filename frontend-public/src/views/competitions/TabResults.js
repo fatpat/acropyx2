@@ -444,7 +444,7 @@ const TabResults = ({ results }) => {
             value={value}
             handleBackButton={event => handleBackButton(event, 100)}
           >
-            Overall results
+            Overall {results.final ? 'final':'intermediate'} results
           </TabPanelOverall>
           {results.runs_results.map((rr, index) => (
             <TabPanelRun
@@ -454,7 +454,7 @@ const TabResults = ({ results }) => {
               value={value}
               handleBackButton={event => handleBackButton(event, 100)}
             >
-              Run {index + 1} results
+              Run {index + 1} {rr.final ? 'final':'intermediate'} results
             </TabPanelRun>
           ))}
         </Grid>
