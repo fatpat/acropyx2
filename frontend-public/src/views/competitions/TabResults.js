@@ -115,10 +115,13 @@ function TabPanelOverall(props) {
       {value === index && (
         <Box sx={{ p: 3 }}>
           <TableContainer component={Paper} hidden={displayPilotResume}>
-            <IconButton aria-label='delete' onClick={event => handleBackButton(event, 0)}>
-              <ArrowBackIcon />
-            </IconButton>
-            <Typography>{children}</Typography>
+
+            <Typography variant="h5">
+              <IconButton aria-label='delete' onClick={event => handleBackButton(event, 0)}>
+                <ArrowBackIcon />
+              </IconButton>
+              {children}
+            </Typography>
             <Table aria-label='simple table'>
               <TableHead>
                 <TableRow>
@@ -142,25 +145,23 @@ function TabPanelOverall(props) {
                     <TableCell component='th'>{row.pilot.name}</TableCell>
                     <TableCell>
                       <Table aria-label='simple table'>
-                        <TableHead>
+                        <TableBody>
                           <TableRow>
                             <TableCell>Run</TableCell>
                             <TableCell>Rank</TableCell>
                             <TableCell>Score</TableCell>
                           </TableRow>
-                        </TableHead>
-                        <TableBody>
                           {row.result_per_run.map((rr, index) => (
                             <TableRow key={index}>
                               <TableCell>{index+1}</TableCell>
                               <TableCell>{ordinal_suffix(rr.rank)}</TableCell>
-                              <TableCell>{rr.score}</TableCell>
+                              <TableCell>{rr.score.toFixed(3).toLocaleString('en-US')}</TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
                       </Table>
                     </TableCell>
-                    <TableCell component="th">{row.score.toLocaleString('en-US')}</TableCell>
+                    <TableCell component="th">{row.score.toFixed(3).toLocaleString('en-US')}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -228,16 +229,18 @@ function TabPanelRun(props) {
       {value === index && (
         <Box sx={{ p: 3 }}>
           <TableContainer component={Paper} hidden={displayPilotResume}>
-            <IconButton aria-label='delete' onClick={event => handleBackButton(event, 0)}>
-              <ArrowBackIcon />
-            </IconButton>
-            <Typography>{children}</Typography>
+            <Typography variant="h5">
+              <IconButton aria-label='delete' onClick={event => handleBackButton(event, 0)}>
+                <ArrowBackIcon />
+              </IconButton>
+              {children}
+            </Typography>
             <Table aria-label='simple table'>
               <TableHead>
                 <TableRow>
                   <TableCell>Rank</TableCell>
-                  <TableCell align='right'>Name</TableCell>
-                  <TableCell align='right'>Score</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Score</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -251,8 +254,8 @@ function TabPanelRun(props) {
                     <TableCell component='th' scope='row'>
                       {index + 1}
                     </TableCell>
-                    <TableCell align='right'>{row.pilot.name}</TableCell>
-                    <TableCell align='right'>{row.final_marks?.score.toLocaleString('en-US')}</TableCell>
+                    <TableCell>{row.pilot.name}</TableCell>
+                    <TableCell>{row.final_marks?.score.toFixed(3).toLocaleString('en-US')}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -261,16 +264,23 @@ function TabPanelRun(props) {
 
           <Grid container spacing={2}>
             <Grid item xs={12} md={6} hidden={!displayPilotResume}>
-              <IconButton aria-label='delete' onClick={event => hiddenPilotResume(event, 0)}>
-                <ArrowBackIcon />
-              </IconButton>
-              <Typography>
-                {children} - {rows[selectedPilotIndex].pilot.name}
+              <Typography variant="h5">
+                <IconButton aria-label='delete' onClick={event => hiddenPilotResume(event, 0)}>
+                  <ArrowBackIcon />
+                </IconButton>
+                {children} for {rows[selectedPilotIndex].pilot.name}
               </Typography>
-              <Typography variant='span' gutterBottom component='div'>
+
+              <ul hidden={!rows[selectedPilotIndex].did_not_start}>
+                <li>Pilot <b>D</b>id <b>N</b>ot <b>S</b>tart</li>
+                <li><b>Score: {rows[selectedPilotIndex].final_marks?.score.toFixed(3).toLocaleString('en-US')}</b></li>
+                <li><b>Rank: {ordinal_suffix(parseInt(selectedPilotIndex)+1)}</b></li>
+              </ul>
+
+              <Typography hidden={rows[selectedPilotIndex].did_not_start} variant='h6' gutterBottom component='div'>
                 Tricks:
               </Typography>
-              <ol>
+              <ol hidden={rows[selectedPilotIndex].did_not_start}>
                 {rows[selectedPilotIndex].tricks?.map((t, i) => (
                   <li key={i}>
                     {t.name
@@ -280,27 +290,52 @@ function TabPanelRun(props) {
                   </li>
                 ))}
               </ol>
-
-              <Typography variant='span' gutterBottom component='div'>
-                Final Marks:
+              <Typography hidden={rows[selectedPilotIndex].did_not_start} variant='h6' gutterBottom component='div'>
+                Marks:
               </Typography>
-              <ul>
-                <li>Technicity: {rows[selectedPilotIndex].final_marks?.technicity}</li>
-                <li>Bonus percentage: {rows[selectedPilotIndex].final_marks?.bonus_percentage}</li>
-                <li>Technical: {rows[selectedPilotIndex].final_marks?.technical}</li>
-                <li>Choreography: {rows[selectedPilotIndex].final_marks?.choreography}</li>
-                <li>Landing: {rows[selectedPilotIndex].final_marks?.landing}</li>
-                <li>Bonus: {rows[selectedPilotIndex].final_marks?.bonus}</li>
-                <li>Malus: {rows[selectedPilotIndex].final_marks?.malus}</li>
-                <li>Score: {rows[selectedPilotIndex].final_marks?.score}</li>
+              <ul hidden={rows[selectedPilotIndex].did_not_start}>
+                <li>Technicity: {rows[selectedPilotIndex].final_marks?.technicity.toFixed(3).toLocaleString('en-US')}</li>
+                <li>Bonus percentage: {rows[selectedPilotIndex].final_marks?.bonus_percentage}%</li>
+                <li>Malus: {rows[selectedPilotIndex].final_marks?.malus}%</li>
                 <li>
-                  Warnings:
+                  Judge's marks:
                   <ul>
-                    {rows[selectedPilotIndex].final_marks?.warnings.map((w, i) => (
-                      <li key={i}>w</li>
-                    ))}
+                    <li>Technical: {rows[selectedPilotIndex].final_marks?.judges_mark?.technical.toFixed(3).toLocaleString('en-US')}</li>
+                    <li>Choreography: {rows[selectedPilotIndex].final_marks?.judges_mark?.choreography.toFixed(3).toLocaleString('en-US')}</li>
+                    <li>Landing: {rows[selectedPilotIndex].final_marks?.judges_mark?.landing.toFixed(3).toLocaleString('en-US')}</li>
                   </ul>
                 </li>
+                <li>
+                  Calculated Marks:
+                  <ul>
+                    <li>Technical: {rows[selectedPilotIndex].final_marks?.technical.toFixed(3).toLocaleString('en-US')}</li>
+                    <li>Choreography: {rows[selectedPilotIndex].final_marks?.choreography.toFixed(3).toLocaleString('en-US')}</li>
+                    <li>Landing: {rows[selectedPilotIndex].final_marks?.landing.toFixed(3).toLocaleString('en-US')}</li>
+                  </ul>
+                </li>
+                <li>Bonus: {rows[selectedPilotIndex].final_marks?.bonus.toFixed(3).toLocaleString('en-US')}</li>
+                <li><b>Score: {rows[selectedPilotIndex].final_marks?.score.toFixed(3).toLocaleString('en-US')}</b></li>
+                <li><b>Rank: {ordinal_suffix(parseInt(selectedPilotIndex)+1)}</b></li>
+                {rows[selectedPilotIndex].final_marks?.warnings.length > 0 &&
+                  <li>
+                    Warnings:
+                    <ul>
+                      {rows[selectedPilotIndex].final_marks?.warnings.map((w, i) => (
+                        <li key={i}>{w}</li>
+                      ))}
+                    </ul>
+                  </li>
+                }
+                {rows[selectedPilotIndex].final_marks?.notes.length > 0 &&
+                  <li>
+                    Notes:
+                    <ul>
+                      {rows[selectedPilotIndex].final_marks?.notes.map((n, i) => (
+                        <li key={i}>{n}</li>
+                      ))}
+                    </ul>
+                  </li>
+                }
               </ul>
             </Grid>
           </Grid>
