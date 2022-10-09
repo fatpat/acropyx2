@@ -62,7 +62,7 @@ const Dashboard = ({ data }) => {
           <Typography variant='h5'>Archived competitions</Typography>
         </Grid>
         {Object.keys(data).sort().reverse().map(year => (
-          <Grid item xs={12}>
+          <Grid item xs={12} key={year}>
             <Card>
               <Typography variant='h5' style={{'text-align':'center'}}>{year}</Typography>
               <EnhancedTable
