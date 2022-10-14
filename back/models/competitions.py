@@ -1,5 +1,5 @@
 import logging
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, AnyHttpUrl
 from fastapi import  HTTPException
 from bson import ObjectId
 from typing import List, Optional
@@ -52,6 +52,7 @@ class CompetitionExport(BaseModel):
     state: CompetitionState
     config: CompetitionConfig
     runs: List[RunExport]
+    image: Optional[AnyHttpUrl]
 
     class Config:
         json_encoders = {ObjectId: str}
@@ -71,6 +72,7 @@ class CompetitionPublicExport(BaseModel):
     number_of_teams: int
     number_of_judges: int
     number_of_runs: int
+    image: Optional[AnyHttpUrl]
 
     class Config:
         json_encoders = {ObjectId: str}
@@ -89,6 +91,7 @@ class CompetitionNew(BaseModel):
     location: str = Field(..., min_len=1)
     published: bool
     type: CompetitionType
+    image: Optional[str]
 
 
     async def create(self):
@@ -112,6 +115,7 @@ class CompetitionNew(BaseModel):
             judges = [],
             runs = [],
             deleted = None,
+            image = self.image,
         )
 
         return await competition.create()
@@ -126,6 +130,7 @@ class Competition(CompetitionNew):
     config: CompetitionConfig
     runs: List[Run]
     deleted: Optional[datetime]
+    image: Optional[str]
 
     class Config:
         allow_population_by_field_name = True
@@ -195,6 +200,11 @@ class Competition(CompetitionNew):
         if res.modified_count != 1:
             raise HTTPException(400, f"Error while saving Competition {self.id}, 1 item should have been saved, got {res.modified_count}")
 
+    def image_url(self):
+        if self.image is not None:
+            return f"{settings.SERVER_HOST}/files/{self.image}"
+        return None
+
     async def export(self, cache:dict={}) -> CompetitionExport:
 
         pilots = []
@@ -235,7 +245,8 @@ class Competition(CompetitionNew):
             repeatable_tricks = repeatable_tricks,
             state = self.state,
             config = self.config,
-            runs = runs
+            runs = runs,
+            image = self.image_url(),
         )
 
     async def export_public(self) -> CompetitionPublicExport:
@@ -255,7 +266,8 @@ class Competition(CompetitionNew):
             number_of_teams = len(self.teams),
             number_of_judges = len(self.judges),
             number_of_runs = len(self.runs),
-            state = self.state
+            state = self.state,
+            image = self.image_url(),
         )
 
     async def export_public_with_results(self, cache:dict = {}) -> CompetitionPublicExportWithResults:
@@ -285,7 +297,8 @@ class Competition(CompetitionNew):
             number_of_judges = len(self.judges),
             number_of_runs = len(self.runs),
             state = comp.state,
-            results = await results.export(cache=cache)
+            results = await results.export(cache=cache),
+            image = comp.image,
         )
 
 #    async def sort_pilots(self):
@@ -306,6 +319,7 @@ class Competition(CompetitionNew):
         self.end_date = updated_comp.end_date
         self.location = updated_comp.location
         self.published = updated_comp.published
+        self.image = updated_comp.image
 
         if self.type != updated_comp.type and self.state != CompetitionState.init:
             raise HTTPException(400, "Can't change the type of an already open or closed competition")
