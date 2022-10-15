@@ -75,7 +75,6 @@ import TabConfig from 'src/views/competitions/TabConfig'
 import TabCompResults from 'src/views/competitions/TabCompResults'
 import TabRepeatableTricks from 'src/views/competitions/TabRepeatableTricks'
 
-
 const Tab = styled(MuiTab)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     minWidth: 100
@@ -121,6 +120,7 @@ const CompetitionPage = () => {
   const startDateRef = useRef()
   const endDateRef = useRef()
   const locationRef = useRef()
+  const inputRef = useRef()
 
   const loadCompetition = async () => {
     setLoading(true)
@@ -137,10 +137,48 @@ const CompetitionPage = () => {
     data.delete = 'delete'
     data.update = 'update'
     data.id = data._id
+    data.acronym = data.name.split(/[\W]+/).map(w => w[0]).join('').toUpperCase()
 
     setComp(data)
     setTempComp(Object.assign({}, data)) // clone data before assigning it to tempComp, otherwise they'll share the same object
     setLoading(false)
+  }
+
+  const updateImage = async(event) => {
+    inputRef.current.click()
+  }
+
+  const uploadImage = async(event) => {
+    const file = event.target.files && event.target.files[0]
+    if (!file) return
+
+    if (!file.type.match(/^image\//)) {
+      return error(`Error: only images are allowed (got '${file.type}')`)
+    }
+
+    // reset file input
+    event.target.value = null;
+
+    // create a formData
+    const formData = new FormData()
+    formData.append("file", file, file.name)
+
+    const [err, retData, headers] = await APIRequest('/files/new', {
+      expected_status: 200,
+      method: 'POST',
+      body: formData,
+    })
+
+    if (err) {
+        error(`error while updating competition ${cid}: ${err}`)
+        return
+    }
+    console.log(retData)
+
+    tempComp.image = retData.id
+    setTempComp(tempComp)
+    
+    await updateCompetition(new Event('image'))
   }
 
   const updateCompetition = async(event) => {
@@ -158,6 +196,7 @@ const CompetitionPage = () => {
         location: tempComp.location,
         published: tempComp.published,
         type: tempComp.type,
+        image: tempComp.image,
     }
 
     const [err, retData, headers] = await APIRequest(route, {
@@ -307,7 +346,17 @@ const CompetitionPage = () => {
     <Grid container spacing={6}>
 
       <Grid item xs={12}>
-        <Typography variant='h5'>{comp.name}<RefreshIcon className="hideToPrint" onClick={loadCompetition} /></Typography>
+        <input
+          style={{display: 'none'}}
+          ref={inputRef}
+          type="file"
+          onChange={uploadImage}
+        />  
+        <Typography variant='h5' sx={{display: 'flex'}}>
+          <Avatar src={comp.image} onClick={updateImage}>{comp.acronym}</Avatar>
+          &nbsp;
+          {comp.name}<RefreshIcon className="hideToPrint" onClick={loadCompetition} />
+        </Typography>
       </Grid>
 
       <Grid item xs={12} md={6} sx={{ paddingBottom: 4 }}>
