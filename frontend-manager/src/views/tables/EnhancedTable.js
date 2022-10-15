@@ -146,8 +146,8 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired
 }
 
-export default function EnhancedTable({ rows, headCells, orderById, actionRowId, numRows=50, rowPerPageOptions=[5, 10, 25, 50, 100, 1000] }) {
-  const [order, setOrder] = React.useState('asc')
+export default function EnhancedTable({ rows, headCells, orderById, actionRowId, numRows=50, rowPerPageOptions=[5, 10, 25, 50, 100, 1000], orderId='asc' }) {
+  const [order, setOrder] = React.useState(orderId)
   const [orderBy, setOrderBy] = React.useState(orderById)
   const [selected, setSelected] = React.useState([])
   const [page, setPage] = React.useState(0)

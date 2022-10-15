@@ -287,7 +287,7 @@ const CompetitionsPage = () => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <EnhancedTable rows={data} headCells={headCells} orderById='start_date' />
+          <EnhancedTable rows={data} headCells={headCells} orderById='start_date' orderId='desc' />
         </Card>
       </Grid>
     </Grid>
