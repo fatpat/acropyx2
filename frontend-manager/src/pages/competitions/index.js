@@ -130,10 +130,10 @@ const CompetitionsPage = () => {
       id: 'type',
     },
     {
-      id: 'start_date',
+      id: 'state',
     },
     {
-      id: 'end_date',
+      id: 'start_date',
     },
     {
       id: 'location',
