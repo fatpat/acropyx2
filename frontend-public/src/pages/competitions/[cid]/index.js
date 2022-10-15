@@ -7,6 +7,7 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
+import Avatar from '@mui/material/Avatar'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 import TabContext from '@mui/lab/TabContext'
@@ -87,7 +88,10 @@ const CompetitionsPage = ({ data }) => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <Typography variant='h5'>Competition - {data.name}</Typography>
+        <Typography variant='h5' sx={{display: 'flex'}}>
+          <Avatar src={data.image}>{data.acronym}</Avatar>&nbsp;
+          {data.name}
+        </Typography>
       </Grid>
       <Grid item xs={12}>
         <Card>
@@ -166,6 +170,7 @@ export async function getStaticPaths() {
 // This gets called on every request
 export async function getStaticProps({ params }) {
   let data = await get(`/public/competitions/${params.cid}`)
+  data.acronym = data.name.split(/[\W]+/).map(w => w[0]).join('').toUpperCase()
 
   //let data = mockData
 
