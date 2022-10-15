@@ -22,7 +22,6 @@ files = APIRouter()
     "/{id}",
     response_description="",
     response_class=Response,
-    dependencies=[Depends(auth)],
 )
 async def get_file(request: Request, id: str, download : bool = False):
     file = await File.get(id)
