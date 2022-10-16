@@ -40,7 +40,10 @@ const CardUser = ({ pilot }) => {
             <Typography variant='h6'>
               <Link href={pilot.link} target='_blank' rel='noopener,noreferrer'>
                 {pilot.name}
-              </Link>{' '}
+              </Link>
+              {' '}
+              <span>{pilot.gender == "man" ? "♂️" : "♀️"}</span>
+              {' '}
               <ReactCountryFlag
                 countryCode={countriesQuery.convertAlphaCode(pilot.country)}
                 svg
