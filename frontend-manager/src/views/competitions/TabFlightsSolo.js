@@ -26,6 +26,7 @@ import Editable from 'src/components/Editable'
 import Autocomplete from '@mui/material/Autocomplete'
 import NativeSelect from '@mui/material/NativeSelect'
 import LinearProgress from '@mui/material/LinearProgress'
+import Checkbox from '@mui/material/Checkbox'
 
 // ** local
 import EnhancedTable from 'src/views/tables/EnhancedTable'
@@ -59,6 +60,7 @@ const TabFlights = ({ comp, run, rid }) => {
   })
   const [uniqueTricks] = useUniqueTricks(comp.type)
   const [resultsOK, setResultsOK] = useState(false)
+  const [published, setPublished] = useState(false)
 
   // ** refs
   const nameRef = useRef()
@@ -79,6 +81,7 @@ const TabFlights = ({ comp, run, rid }) => {
     }
     if (status == 404) {
       data = {
+        published: false,
         marks: [],
         tricks: []
       }
@@ -91,13 +94,13 @@ const TabFlights = ({ comp, run, rid }) => {
       result = retData.final_marks
       resultsOK = true
     }
-    console.log("retrieved Data", data)
 
     setData(data)
     setResult(result)
     setResultsOK(resultsOK)
     setPilot(pilot)
     setCurrentFlight(currentFlight)
+    setPublished(resultsOK ? data.published : false)
     setLoading(null)
   }
 
@@ -173,6 +176,8 @@ const TabFlights = ({ comp, run, rid }) => {
         return
     }
 
+    setPublished(publish)
+
     success(`${pilot.name}'s flights saved with a ${retData.score} score`)
     if (next != 0) loadPilot(currentFlight + next)
   }
@@ -180,7 +185,7 @@ const TabFlights = ({ comp, run, rid }) => {
   const didNotStart = async(e) => {
     if (!confirm('Are you sure to publish a DNS flight ?')) return
     data.did_not_start = true
-    saveResults(true)
+    saveResults(true, false)
   }
 
   useEffect(() => {
@@ -332,6 +337,9 @@ const TabFlights = ({ comp, run, rid }) => {
                   </TableCell>
                   <TableCell>
                     <Typography>% Bonus: {result.bonus_percentage ?? ""}%</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography>Published? <Checkbox disabled checked={published} /></Typography>
                   </TableCell>
                 </TableRow>
                 <TableRow>

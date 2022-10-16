@@ -71,7 +71,7 @@ const TabRepeatableTricks = ({tricks, allTricks, update}) => {
           <Button variant='contained' onClick={() => {update(value.concat(tricks))}}><AddIcon /></Button>
         </Grid>
         <Grid item xs={12} sm={12}>
-          <EnhancedTable rows={tricks} headCells={headCells} orderById='technical_coefficient' />
+          <EnhancedTable rows={tricks} headCells={headCells} orderById='technical_coefficient' pagination={false}/>
         </Grid>
       </Grid>
     </CardContent>

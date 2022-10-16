@@ -44,7 +44,7 @@ const TabJudges = ({ judges }) => {
           </Button>
         </Grid>
         <Grid item xs={12} sm={12}>
-          <EnhancedTable rows={judges.map(j => createData(j, ''))} headCells={headCells} orderById='rank' />
+          <EnhancedTable rows={judges.map(j => createData(j, ''))} headCells={headCells} orderById='rank' pagination={false}/>
         </Grid>
       </Grid>
     </CardContent>

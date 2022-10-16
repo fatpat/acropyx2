@@ -44,7 +44,7 @@ const TabReapeatableTricks = ({ tricks }) => {
           </Button>
         </Grid>
         <Grid item xs={12} sm={12}>
-          <EnhancedTable rows={tricks.map(j => createData(j, ''))} headCells={headCells} orderById='rank' />
+          <EnhancedTable rows={tricks.map(j => createData(j, ''))} headCells={headCells} orderById='rank' pagination={false}/>
         </Grid>
       </Grid>
     </CardContent>

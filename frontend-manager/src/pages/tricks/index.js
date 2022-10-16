@@ -428,7 +428,7 @@ const TricksPage = () => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <EnhancedTable rows={data} headCells={headCells} orderById='technical_coefficient' />
+          <EnhancedTable rows={data} headCells={headCells} orderById='technical_coefficient' pagination={false}/>
         </Card>
       </Grid>
     </Grid>

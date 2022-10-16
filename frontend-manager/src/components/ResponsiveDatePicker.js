@@ -13,6 +13,7 @@ export default function ResponsiveDatePicker(props) {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DatePicker
+        views={props.views ?? ['year', 'day']}
         label={props.label}
         value={value}
         onChange={(newValue) => {

@@ -322,7 +322,7 @@ const JudgesPage = () => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <EnhancedTable rows={data} headCells={headCells} orderById='name' />
+          <EnhancedTable rows={data} headCells={headCells} orderById='name' pagination={false}/>
         </Card>
       </Grid>
     </Grid>

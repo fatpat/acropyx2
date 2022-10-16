@@ -75,7 +75,7 @@ const TabJudges = ({judges, allJudges, update}) => {
           <Button variant='contained' onClick={() => {update(value.concat(judges))}}><AddIcon /></Button>
         </Grid>
         <Grid item xs={12} sm={12}>
-          <EnhancedTable rows={judges} headCells={headCells} orderById='level' />
+          <EnhancedTable rows={judges} headCells={headCells} orderById='level' pagination={false}/>
         </Grid>
       </Grid>
     </CardContent>

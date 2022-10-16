@@ -98,6 +98,7 @@ const TabResults = ({ code, rid }) => {
                   <TableCell>Final marks</TableCell>
                   <TableCell>Bonus</TableCell>
                   <TableCell>Score</TableCell>
+                  <TableCell>Published</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -141,140 +142,31 @@ const TabResults = ({ code, rid }) => {
                     { r.did_not_start && <p>DID NOT START</p>}
                   </TableCell>
                   <TableCell>
-                    <p>Techniciy: {r.final_marks.technicity}</p>
+                    <p>Techniciy: {r.final_marks.technicity.toFixed(3)}</p>
                     <p>Bonus: {r.final_marks.bonus_percentage}%</p>
                   </TableCell>
                   <TableCell>
-                    <p>Technical: {r.final_marks.judges_mark.technical}</p>
-                    <p>Choreography: {r.final_marks.judges_mark.choreography}</p>
-                    <p>Landing: {r.final_marks.judges_mark.landing}</p>
+                    <p>Technical: {r.final_marks.judges_mark.technical.toFixed(3)}</p>
+                    <p>Choreography: {r.final_marks.judges_mark.choreography.toFixed(3)}</p>
+                    <p>Landing: {r.final_marks.judges_mark.landing.toFixed(3)}</p>
 { results.type == "synchro" &&
-                    <p>Synchro: {r.final_marks.judges_mark.synchro}</p>
+                    <p>Synchro: {r.final_marks.judges_mark.synchro.toFixed(3)}</p>
 }
                   </TableCell>
                   <TableCell>
-                    <p>Technical: {r.final_marks.technical}</p>
-                    <p>Choreography: {r.final_marks.choreography}</p>
-                    <p>Landing: {r.final_marks.landing}</p>
+                    <p>Technical: {r.final_marks.technical.toFixed(3)}</p>
+                    <p>Choreography: {r.final_marks.choreography.toFixed(3)}</p>
+                    <p>Landing: {r.final_marks.landing.toFixed(3)}</p>
 { results.type == "synchro" &&
-                    <p>Synchro: {r.final_marks.synchro}</p>
+                    <p>Synchro: {r.final_marks.synchro.toFixed(3)}</p>
 }
                   </TableCell>
-                  <TableCell>{r.final_marks.bonus}</TableCell>
-                  <TableCell><strong>{r.final_marks.score}</strong></TableCell>
+                  <TableCell>{r.final_marks.bonus.toFixed(3)}</TableCell>
+                  <TableCell><strong>{r.final_marks.score.toFixed(3)}</strong></TableCell>
+                  <TableCell><Checkbox disabled checked={r.published} /></TableCell>
                 </TableRow>
   )
 })}
-                <TableRow key="blank1">
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                </TableRow>
-                <TableRow key="blank2">
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                </TableRow>
-                <TableRow key="blank3">
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                </TableRow>
-                <TableRow key="blank4">
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                </TableRow>
-                <TableRow key="blank5">
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                </TableRow>
-                <TableRow key="blank6">
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                </TableRow>
-                <TableRow key="blank7">
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                </TableRow>
-                <TableRow key="blank8">
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                </TableRow>
-                <TableRow key="blank9">
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                </TableRow>
-                <TableRow key="blank10">
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                  <TableCell>&nbsp;</TableCell>
-                </TableRow>
               </TableBody>
             </Table>
           </TableContainer>

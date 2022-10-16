@@ -57,7 +57,7 @@ const TabPilots = ({ pilots }) => {
           </Button>
         </Grid>
         <Grid item xs={12} sm={12}>
-          <EnhancedTable rows={pilots.map(p => createData(p))} headCells={headCells} orderById='rank' />
+          <EnhancedTable rows={pilots.map(p => createData(p))} headCells={headCells} orderById='rank' pagination={false}/>
         </Grid>
       </Grid>
     </CardContent>

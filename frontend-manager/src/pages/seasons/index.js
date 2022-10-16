@@ -45,7 +45,11 @@ import { APIRequest } from 'src/util/backend'
 import modalStyle from 'src/configs/modalStyle'
 import ResponsiveDatePicker from 'src/components/ResponsiveDatePicker'
 
-const CompetitionsPage = () => {
+const emptySeason = {
+  year: (new Date()).getFullYear()
+}
+
+const SeasonsPage = () => {
   // ** notification messages
   const [success, info, warning, error] = useNotifications()
 
@@ -58,12 +62,12 @@ const CompetitionsPage = () => {
   const [isLoading, setLoading] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [modalTitle, setModalTitle] = useState('')
-  const [newCompetition, setNewCompetition] = useState({})
+  const [newSeason, setNewSeason] = useState(emptySeason)
 
-  const loadCompetitions = async () => {
+  const loadSeasons = async () => {
     setLoading(true)
 
-    const [err, data, headers] = await APIRequest('/competitions', {expect_json: true})
+    const [err, data, headers] = await APIRequest('/seasons', {expect_json: true})
 
     if (err) {
         setData(false)
@@ -75,6 +79,7 @@ const CompetitionsPage = () => {
     data = data.map(j => {
       j.delete = 'delete'
       j.update = 'update'
+      j.number_of_competitions = (j.competitions ?? []).length
       j.id = j._id
       return j
     })
@@ -84,28 +89,28 @@ const CompetitionsPage = () => {
     setLoading(false)
   }
 
-  const createOrUpdateCompetition = async(event) => {
+  const createOrUpdateSeason = async(event) => {
     event.preventDefault()
 
-    const [err, data, headers] = await APIRequest(`/competitions/new`, {
+    const [err, data, headers] = await APIRequest(`/seasons/new`, {
       expected_status: 201,
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(newCompetition),
+      body: JSON.stringify(newSeason),
     })
 
     if (err) {
-        error(`error while creating new competition: ${err}`)
+        error(`error while creating new season: ${err}`)
         return
     }
 
     setModalOpen(false)
-    loadCompetitions()
+    loadSeasons()
   }
 
   const openCreateModal = () => {
-    setModalTitle('New competition')
-    setNewCompetition({})
+    setModalTitle('New Season')
+    setNewSeason(emptySeason)
     setModalOpen(true)
   }
 
@@ -124,38 +129,30 @@ const CompetitionsPage = () => {
     {
       id: 'name',
       type: 'LINK',
-      href: (v, comp) => `/competitions/show?cid=${comp.code}`,
+      href: (v, season) => `/seasons/show?sid=${season.tag}`,
+    },
+    {
+      id: 'tag',
     },
     {
       id: 'type',
     },
     {
-      id: 'tags',
-      rewrite: (v) => v.join(', ')
+      id: 'year',
     },
     {
-      id: 'state',
+      id: 'number_of_competitions',
     },
     {
-      id: 'start_date',
+      id: 'number_of_pilots',
     },
     {
-      id: 'location',
-    },
-    {
-      id: 'number_of_runs',
-    },
-    {
-      id: 'code',
-    },
-    {
-      id: 'published',
-      type: 'BOOLEAN',
+      id: 'number_of_teams',
     }
   ]
 
   useEffect(() => {
-      loadCompetitions()
+      loadSeasons()
   }, [])
 
   if (isLoading) {
@@ -175,17 +172,17 @@ const CompetitionsPage = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <Typography variant='h5'>Competitions<RefreshIcon onClick={loadCompetitions} /></Typography>
+        <Typography variant='h5'>Seasons<RefreshIcon onClick={loadSeasons} /></Typography>
       </Grid>
       <Grid item xs={4} sm={4}>
-        <TextField fullWidth id='outlined-basic' label='Search competition' variant='outlined' onChange={updateSearch} />
+        <TextField fullWidth id='outlined-basic' label='Search seasons' variant='outlined' onChange={updateSearch} />
       </Grid>
       <Grid item xs={8} sm={8} container>
         <Button
           variant='contained'
           onClick={openCreateModal}
           startIcon={<AddIcon />}
-        >new competition</Button>
+        >New Season</Button>
         <Modal
           open={modalOpen}
           onClose={() => setModalOpen(false)}
@@ -193,87 +190,41 @@ const CompetitionsPage = () => {
           aria-describedby='modal-modal-description'
         >
           <Card sx={modalStyle}>
-            <form onSubmit={createOrUpdateCompetition}>
+            <form onSubmit={createOrUpdateSeason}>
               <CardHeader
                 title={modalTitle}
                 titleTypographyProps={{ variant: 'h6' }}
               />
               <CardContent>
                 <Grid container spacing={5}>
-                  <Grid item xs={8}>
+                  <Grid item xs={12}>
                     <TextField
-                      fullWidth name="name" label='Name' placeholder='Competition name' defaultValue={newCompetition.name ?? ""}
+                      fullWidth name="name" label='Name' placeholder='Season name' defaultValue={newSeason.name ?? ""}
                       onChange={(e) => {
-                        newCompetition.name = e.target.value
-                        setNewCompetition(newCompetition)
+                        newSeason.name = e.target.value
+                        setNewSeason(newSeason)
                       }}
                     />
                   </Grid>
-                  <Grid item xs={4}>
-                    <Autocomplete
-                      disablePortal
-                      id="autocomplete-type"
-                      options={['solo', 'synchro']}
-                      defaultValue={newCompetition.type ?? ""}
-                      renderInput={(params) => <TextField {...params} name="type" label="Type" />}
-                      onChange={(e, v) => {
-                        newCompetition.type = v
-                        setNewCompetition(newCompetition)
+                  <Grid item xs={6}>
+                    <TextField
+                      fullWidth name="tag" label='tag' placeholder='Tag' defaultValue={newSeason.tag ?? ""}
+                      onChange={(e) => {
+                        newSeason.tag = e.target.value
+                        setNewSeason(newSeason)
                       }}
                     />
                   </Grid>
                   <Grid item xs={6}>
                     <ResponsiveDatePicker
-                      label="Start Date"
-                      default={newCompetition.start_date ?? ""}
+                      views={['year']}
+                      label="Year"
+                      default={new Date(newSeason.year, 1, 1)}
                       onChange={(v) => {
-                        newCompetition.start_date = v
-                        setNewCompetition(newCompetition)
+                        newSeason.year = parseInt(v.getFullYear())
+                        setNewSeason(newSeason)
                       }}
                     />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <ResponsiveDatePicker
-                      label="End Date"
-                      default={newCompetition.end_date ?? ""}
-                      onChange={(v) => {
-                        newCompetition.end_date = v
-                        setNewCompetition(newCompetition)
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth name="location" label='Location' placeholder='Location' defaultValue={newCompetition.location ?? ""}
-                      onChange={(e) => {
-                        newCompetition.location = e.target.value
-                        setNewCompetition(newCompetition)
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <TextField
-                      fullWidth name="code" label='Code' placeholder='Code' defaultValue={newCompetition.code ?? ""}
-                      onChange={(e) => {
-                        if (e.target.value.length > 0) {
-                          newCompetition.code = e.target.value
-                          setNewCompetition(newCompetition)
-                        } else {
-                          delete newCompetition.code
-                        }
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={2}>
-                    <FormGroup>
-                      <FormControlLabel
-                        control={<Checkbox defaultCHecked={newCompetition.published ?? true} onChange={(e) => {
-                            newCompetition.published = e.target.checked
-                            setNewCompetition(newCompetition)
-                        }}/>}
-                        label="Published"
-                      />
-                    </FormGroup>
                   </Grid>
                 </Grid>
               </CardContent>
@@ -291,11 +242,11 @@ const CompetitionsPage = () => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <EnhancedTable rows={data} headCells={headCells} orderById='start_date' orderId='desc' pagination={false}/>
+          <EnhancedTable rows={data} headCells={headCells} orderById='year' defaultOrder='desc' pagination={false}/>
         </Card>
       </Grid>
     </Grid>
   )
 }
 
-export default CompetitionsPage
+export default SeasonsPage

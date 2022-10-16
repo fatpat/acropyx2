@@ -95,7 +95,7 @@ const TabRuns = ({comp, refresh}) => {
           </Button>
         </Grid>
         <Grid item xs={12} sm={12}>
-          <EnhancedTable rows={runs} headCells={headCells} orderById='id' />
+          <EnhancedTable rows={runs} headCells={headCells} orderById='id' pagination={false}/>
         </Grid>
       </Grid>
     </CardContent>

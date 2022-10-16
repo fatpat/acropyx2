@@ -107,7 +107,7 @@ const CompetitionPage = () => {
   // ** local
   const [comp, setComp] = useState({})
   const [tempComp, setTempComp] = useState({})
-  const [isLoading, setLoading] = useState(false)
+  const [isLoading, setLoading] = useState(true)
   const [tabContext, setTabContext] = useState('actions')
   const [allPilots] = usePilots()
   const [allTeams] = useTeams()
@@ -121,6 +121,7 @@ const CompetitionPage = () => {
   const endDateRef = useRef()
   const locationRef = useRef()
   const inputRef = useRef()
+  const tagsRef = useRef()
 
   const loadCompetition = async () => {
     setLoading(true)
@@ -197,6 +198,7 @@ const CompetitionPage = () => {
         published: tempComp.published,
         type: tempComp.type,
         image: tempComp.image,
+        tags: tempComp.tags,
     }
 
     const [err, retData, headers] = await APIRequest(route, {
@@ -412,6 +414,25 @@ const CompetitionPage = () => {
         </Typography>
         <Typography>
           Type: <strong>{tempComp.type}</strong>
+        </Typography>
+        <Typography>
+          <Editable
+            text={tempComp.tags.length > 0 ? tempComp.tags.join(', ') : "none"}
+            title="Tags"
+            onChange={updateCompetition}
+            onCancel={(e) => {
+              setTempComp(comp)
+            }}
+            childRef={tagsRef}
+          >
+                    <TextField
+                      fullWidth name="tags" label='Tags' placeholder='Tags' defaultValue={tempComp.tags.join(', ')} inputProps={ {ref:tagsRef} }
+                      onChange={(e) => {
+                        tempComp.tags = e.target.value.split(/[, ]+/).filter(t => t != "")
+                        setTempComp(tempComp)
+                      }}
+                    />
+          </Editable>
         </Typography>
       </Grid>
 
