@@ -72,3 +72,18 @@ async def update_rankings():
 )
 async def create(civlid: int):
     return await PilotCtrl.update_pilot(civlid)
+
+#
+# change gender
+#
+@pilots.patch(
+    "/{civlid}/gender",
+    status_code=200,
+    response_description="Change pilot gender",
+    response_model=Pilot,
+    dependencies=[Depends(auth)],
+)
+async def change_gender(civlid: int):
+    pilot = await Pilot.get(civlid)
+    pilot.change_gender()
+    return await pilot.save()

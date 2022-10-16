@@ -108,6 +108,7 @@ class PilotCtrl:
             try:
                 ret = await client.get(link)
             except httpx.HTTPError as exc:
+                log.error(f"Connection failed to CIVL website ({link})", exc)
                 raise HTTPException(status_code=500, detail=f"Connection failed to CIVL website")
 
             if ret.status_code == HTTPStatus.NOT_FOUND:
@@ -186,6 +187,14 @@ class PilotCtrl:
             background_picture=background_picture,
             rank = rank,
         )
+
+        # keep gender as CIVL does not permit, yet, do retrieve pilot gender
+        try:
+            previousPilot = await Pilot.get(civlid)
+            pilot.gender = previousPilot.gender
+        except Exception:
+            pass
+
         return await pilot.save()
 
     @staticmethod

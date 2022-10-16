@@ -23,6 +23,11 @@ class Sponsor(BaseModel):
     link: HttpUrl
     img: str
 
+class GenderEnum(str, Enum):
+    man   = 'man'
+    woman = 'woman'
+    none  = 'none'
+
 
 class Pilot(BaseModel):
     id: int = Field(..., alias="_id")
@@ -37,6 +42,7 @@ class Pilot(BaseModel):
     background_picture: HttpUrl = Field(..., description="Link to the background profile image of the pilot")
     last_update: Optional[datetime] = Field(None, description="Last time the pilot has been updated")
     rank: int = Field(..., description="Current pilot's ranking in the aerobatic solo overwall world ranking")
+    gender: GenderEnum = Field(GenderEnum.man, description="Pilot's sex")
 
     class Config:
         allow_population_by_field_name = True
@@ -79,6 +85,12 @@ class Pilot(BaseModel):
             await collection.update_one({"_id": self.id}, {"$set": pilot})
 
         return self
+
+    def change_gender(self):
+        if self.gender == GenderEnum.man:
+            self.gender = GenderEnum.woman
+        elif self.gender == GenderEnum.woman:
+            self.gender = GenderEnum.man
 
     @staticmethod
     async def get(id: int, cache:dict = {}):
