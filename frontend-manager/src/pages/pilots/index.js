@@ -150,23 +150,21 @@ const PilotsPage = () => {
       <Grid item xs={12} sx={{ paddingBottom: 4 }}>
         <Typography variant='h5'>Pilots<RefreshIcon onClick={loadPilots} /></Typography>
       </Grid>
-      <Grid item xs={4} sm={4}>
-        <TextField fullWidth id='outlined-basic' label='Search pilot' variant='outlined' onChange={updateSearch} />
+      <Grid item xs={8} sm={8}>
+        <TextField fullWidth id='outlined-basic' label='Filter pilots' variant='outlined' onChange={updateSearch} />
       </Grid>
-      <Grid item xs={2} sm={2}>
+      <Grid item xs={4} sm={4}>
         <form onSubmit={handleSubmitUpdatePilot}>
           <TextField id='civlid' label='CIVL ID' />
+          <Button type="submit">Add or Update pilot from CIVL</Button>
         </form>
       </Grid>
-      <Grid item xs={2} sm={2}>
-        <form onSubmit={handleSubmitUpdatePilot}>
-          <Button type="submit">Add or Update pilot</Button>
-        </form>
-      </Grid>
+{/* TODO: reenable when fixed from backend (broken because of CIVL shit)
       <Grid item xs={4} sm={4} container direction='row' justifyContent='flex-end'>
-        <Button variant='outlined' startIcon={<RefreshIcon />} onClick={updateRankings} >Update rankings</Button>
+        <Button variant='outlined' startIcon={<RefreshIcon />} onClick={updateRankings} disabled>Update rankings</Button>
         <Button variant='outlined' startIcon={<RefreshIcon />} onClick={updateAllPilots} disabled>Synchronize from CIVL</Button>
       </Grid>
+*/}
       {data.map(p => (
         <Grid item xs={12} sm={4} key={p.civlid}>
           <CardPilot pilot={p} updatePilot={updatePilot} changeGender={changeGender}/>
