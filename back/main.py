@@ -14,6 +14,7 @@ from controllers.pilots import PilotCtrl
 from controllers.teams import TeamCtrl
 from controllers.tricks import TrickCtrl
 from controllers.competitions import CompCtrl
+from controllers.seasons import SeasonCtrl
 
 log = logging.getLogger(__name__)
 app = FastAPI(
@@ -68,6 +69,7 @@ async def startup_event():
     TeamCtrl.start()
     TrickCtrl.start()
     CompCtrl.start()
+    SeasonCtrl.start()
 
 # add a X-Process-Time header
 @app.middleware("http")

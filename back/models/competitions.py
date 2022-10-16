@@ -615,8 +615,6 @@ class Competition(CompetitionNew):
         new_flight.final_marks = mark
         new_flight.published = published
 
-        log.debug(new_flight)
-
         for i, f in enumerate(self.runs[run_i].flights):
             if (self.type == CompetitionType.solo and f.pilot == new_flight.pilot) or (self.type == CompetitionType.synchro and f.team == new_flight.team):
                 self.runs[run_i].flights[i] = new_flight
@@ -706,10 +704,12 @@ class Competition(CompetitionNew):
         return Competition.parse_obj(competition)
 
     @staticmethod
-    async def getall():
+    async def getall(tag: str = None):
         competitions = []
         for competition in await collection.find({"deleted": None}, sort=[("name", pymongo.ASCENDING)]).to_list(1000):
-            competitions.append(Competition.parse_obj(competition))
+            competition = Competition.parse_obj(competition)
+            if tag is None or tag in competition.tags:
+                competitions.append(competition)
         return competitions
 
     @staticmethod

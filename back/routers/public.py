@@ -9,6 +9,7 @@ from models.competitions import Competition, CompetitionExport, CompetitionNew, 
 from models.pilots import Pilot
 from models.judges import Judge
 from models.teams import Team, TeamExport
+from models.seasons import Season, SeasonExport
 from core.config import settings
 from controllers.utils import UtilsCtrl
 
@@ -24,7 +25,7 @@ public = APIRouter()
     response_model=List[Pilot],
 )
 #@cache(expire=settings.CACHE_EXPIRES)
-async def list():
+async def list_teams():
     return await Pilot.getall()
 
 #
@@ -36,7 +37,7 @@ async def list():
     response_model=Pilot,
 )
 #@cache(expire=settings.CACHE_EXPIRES)
-async def get(civlid: int):
+async def get_pilot(civlid: int):
     return await Pilot.get(civlid)
 
 #
@@ -48,7 +49,7 @@ async def get(civlid: int):
     response_model=List[TeamExport],
 )
 #@cache(expire=settings.CACHE_EXPIRES)
-async def list():
+async def list_teams():
     teams = []
     cache = await UtilsCtrl.get_cache()
     for team in await Team.getall(False):
@@ -64,7 +65,7 @@ async def list():
     response_model=TeamExport,
 )
 #@cache(expire=settings.CACHE_EXPIRES)
-async def get(id: str):
+async def get_team(id: str):
     team = await Team.get(id, False)
     return await team.export(cache=await UtilsCtrl.get_cache())
 
@@ -77,7 +78,7 @@ async def get(id: str):
     response_model=List[Judge],
 )
 #@cache(expire=settings.CACHE_EXPIRES)
-async def list():
+async def list_judges():
     return await Judge.getall(False)
 
 #
@@ -89,7 +90,7 @@ async def list():
     response_model=Judge,
 )
 #@cache(expire=settings.CACHE_EXPIRES)
-async def get(id: str):
+async def get_judge(id: str):
     return await Judge.get(id, False)
 
 #
@@ -101,7 +102,7 @@ async def get(id: str):
     response_model=List[CompetitionPublicExport],
 )
 #@cache(expire=settings.CACHE_EXPIRES)
-async def list():
+async def list_competitions():
     comps = []
     for comp in await Competition.getall():
         comp = await comp.export_public()
@@ -118,6 +119,31 @@ async def list():
     response_model=CompetitionPublicExportWithResults,
 )
 #@cache(expire=settings.CACHE_EXPIRES)
-async def get_by_id(id: str):
+async def get_competition(id: str):
     comp = await Competition.get(id)
     return await comp.export_public_with_results(cache=await UtilsCtrl.get_cache())
+
+#
+# Get all seasons
+#
+@public.get(
+    "/seasons",
+    response_description="List all seasons",
+    response_model=List[SeasonExport],
+)
+async def list_seasons(deleted: bool = False):
+    cache=await UtilsCtrl.get_cache()
+    return [await season.export(cache=cache) for season in await Season.getall(deleted=deleted)]
+
+#
+# Get a season
+#
+@public.get(
+    "/seasons/{id}",
+    response_description="Get a Season",
+    response_model=SeasonExport,
+)
+async def get_season(id: str, deleted: bool = False):
+    cache=await UtilsCtrl.get_cache()
+    season = await Season.get(id, deleted=deleted, cache=cache)
+    return await season.export(cache=cache)
