@@ -61,13 +61,29 @@ const PilotsPage = () => {
 
       setLoading(`Updating pilot #${civlid}`)
 
-      const [err, data, headers] = await APIRequest(`/pilots/${civlid}`, {method: 'POST', expected_status: 201})
+      const [err, retData, headers] = await APIRequest(`/pilots/${civlid}`, {method: 'POST', expected_status: 201})
+      if (err) return error(`Error updating Pilot #${civlid}: ${err}`)
+
+      success(`Pilot #${civlid} successfully updated`)
+      setData(data.map(p => p.civlid == civlid ? retData : p))
+      setFullData(fullData.map(p => p.civlid == civlid ? retData : p))
+      setLoading(null)
+  }
+
+  const changeGender = async(civlid) => {
+      if (civlid < 1 || isNaN(civlid)) return
+      setLoading(`Chaging gender of pilot #${civlid}`)
+      const [err, retData, headers] = await APIRequest(`/pilots/${civlid}/gender`, {method: 'PATCH', expected_status: 200})
       if (err) {
-          error(`Error updating Pilot #${civlid}: ${err}`)
-      } else {
-          success(`Pilot #${civlid} successfully updated`)
+          return error(`Error changing gender of pilot #${civlid}: ${err}`)
       }
-      loadPilots()
+
+      setData(data.map(p => p.civlid == civlid ? retData : p))
+      setFullData(fullData.map(p => p.civlid == civlid ? retData : p))
+      setLoading(null)
+
+      success(`Pilot #${civlid} gender changed to ${retData.gender}`)
+
   }
 
   const updateAllPilots = async () => {
@@ -111,7 +127,7 @@ const PilotsPage = () => {
     const r = new RegExp(s, "i");
     const d = fullData.filter(pilot => pilot.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").match(r))
     setData(d)
-    info(`${d.length} pilots filtered over ${fullData.length}`)
+//    info(`${d.length} pilots filtered over ${fullData.length}`)
   }
 
   useEffect(() => {
@@ -153,7 +169,7 @@ const PilotsPage = () => {
       </Grid>
       {data.map(p => (
         <Grid item xs={12} sm={4} key={p.civlid}>
-          <CardPilot pilot={p} updatePilot={updatePilot}/>
+          <CardPilot pilot={p} updatePilot={updatePilot} changeGender={changeGender}/>
         </Grid>
       ))}
     </Grid>

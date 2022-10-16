@@ -1,5 +1,6 @@
 // ** MUI Imports
 import Box from '@mui/material/Box'
+import Badge from '@mui/material/Badge'
 import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
 import Link from '@mui/material/Link'
@@ -42,6 +43,8 @@ const CardPilot = (props) => {
           <Box sx={{ mr: 2, mb: 1, display: 'flex', flexDirection: 'column' }}>
             <Typography variant='h6'>
               <Link href={pilot.link} target="_blank" rel="noopener noreferrer">{pilot.name}</Link>{' '}
+              <span onClick={() => props.changeGender(pilot.civlid)}>{pilot.gender == "man" ? "♂️" : "♀️"}</span>
+              &nbsp;
               <ReactCountryFlag
                 countryCode={countriesQuery.convertAlphaCode(pilot.country)}
                 svg
