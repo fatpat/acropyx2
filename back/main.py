@@ -1,7 +1,7 @@
 import logging
 import core.logging
 from fastapi import FastAPI, Request
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 import time
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.inmemory import InMemoryBackend
@@ -32,23 +32,9 @@ app = FastAPI(
     }
 )
 
-origins = [
-    'http://127.0.0.1:3001',
-    'http://localhost:3001',
-    'https://acropyx.herokuapp.com',
-    'https://preprod-acropyx.herokuapp.com',
-    'https://manager-acropyx.herokuapp.com',
-    'https://preprod-manager-acropyx.herokuapp.com',
-    'https://fatpat.github.io',
-    'https://acropyx.lukedeweert.nl',
-    'https://acroworldtour.com',
-    'http://109.37.130.22',
-    'https://109.37.130.22',
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
