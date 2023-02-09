@@ -3,23 +3,21 @@ on:
   push:
     branches:
       - main
-#  pull_request:
-#    branches: 
-#      - main
-
 jobs:
   deploy-back:
+    name: Deploy API to fly.io
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "preprod-api-acropyx"
-          heroku_email: "jerome@loyet.net"
-          appdir: "back"
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only --dockerfile Dockerfile.fly.io
+        working-directory: ./back
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
-  deploy-front:
+
+  deploy-manager:
+    name: Deploy Manager to github pages
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -31,7 +29,7 @@ jobs:
       - run: yarn run build
         working-directory: ./frontend-manager
         env:
-          NEXT_PUBLIC_API_URL: https://preprod-api-acropyx.herokuapp.com
+          NEXT_PUBLIC_API_URL: https://acropyx2-api-preprod.fly.dev/
           NEXT_PUBLIC_APP_BASE_PATH: /acropyx2/preprod
       - uses: peaceiris/actions-gh-pages@v3
         with:
