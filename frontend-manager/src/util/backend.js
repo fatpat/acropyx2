@@ -19,9 +19,13 @@ export async function APIRequest(route, props={}) {
     props.headers.append('Authorization', 'Bearer ' + token)
   }
 
+  console.log("REQUEST", route)
+
   route = new URL(route, process.env.NEXT_PUBLIC_API_URL)
 
   const res = await fetch(route, props)
+
+  console.log("GOT RESPONSE", res)
 
   var body = null
   const contentType = res.headers.get('content-type')
