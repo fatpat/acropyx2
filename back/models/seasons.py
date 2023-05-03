@@ -177,32 +177,29 @@ class Season(BaseModel):
         for comp in await Competition.getall(tag=self.tag):
             comp = await comp.export_public_with_results(cache=cache)
 
-            # only count published and closed competitions
-            if not comp.published or comp.state != CompetitionState.closed or not comp.results.final:
-                continue
-
             # handle type and check that all comp of the season are of the same type
             if _type is None:
                 _type = comp.type
             elif comp.type != _type:
-                raise HTTPException(500, f"All competition of a season must be of the same type (either solo or synchro). Both are link to the season {self.id}")
+                raise HTTPException(500, f"All competition of a season must be of the same type (either solo or synchro). Both are link to the season {self.name}")
 
             # add the comp to the list of comps
             competitions.append(comp)
 
-            # update results dict from overall comp results
-            for res in comp.results.overall_results:
-                if _type == CompetitionType.synchro:
-                    pilot_or_team = res.team.id
-                    teams[res.team.id] = 0
-                    for pilot in res.team.pilots:
-                        pilots[pilot.civlid] = 0
-                else:
-                    pilot_or_team = res.pilot.civlid
-                    pilots[res.pilot.civlid] = 0
-                if pilot_or_team not in results:
-                    results[pilot_or_team] = 0
-                results[pilot_or_team] += res.score
+            # only count published and closed competitions
+            if comp.published and comp.state == CompetitionState.closed and comp.results.final:
+                for res in comp.results.overall_results:
+                    if _type == CompetitionType.synchro:
+                        pilot_or_team = res.team.id
+                        teams[res.team.id] = 0
+                        for pilot in res.team.pilots:
+                            pilots[pilot.civlid] = 0
+                    else:
+                        pilot_or_team = res.pilot.civlid
+                        pilots[res.pilot.civlid] = 0
+                    if pilot_or_team not in results:
+                        results[pilot_or_team] = 0
+                    results[pilot_or_team] += res.score
 
         overall = SeasonResults(type="overall", results=[])
         for pilot_or_team, score in results.items():
