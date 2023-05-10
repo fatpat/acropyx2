@@ -197,7 +197,7 @@ const SeasonPage = () => {
 
     const updatedSeason = {
         name: tempSeason.name,
-        tag: tempSeason.tag,
+        code: tempSeason.code,
         year: tempSeason.year,
         image: tempSeason.image,
     }
@@ -213,8 +213,8 @@ const SeasonPage = () => {
         error(`error while updating season ${sid}: ${err}`)
         return
     }
-    setSid(tempSeason.tag)
-    if (tempSeason.tag != season.tag) return router.push(`/seasons/show?sid=${tempSeason.tag}`)
+    setSid(tempSeason.code)
+    if (tempSeason.code != season.code) return router.push(`/seasons/show?sid=${tempSeason.code}`)
     loadSeason()
   }
 
@@ -289,8 +289,8 @@ const SeasonPage = () => {
         </Typography>
         <Typography>
           <Editable
-            text={tempSeason.tag}
-            title="Tag"
+            text={tempSeason.code}
+            title="Code"
             onChange={updateSeason}
             onCancel={(e) => {
               setTempSeason(season)
@@ -298,9 +298,9 @@ const SeasonPage = () => {
             childRef={codeRef}
           >
                     <TextField
-                      fullWidth name="code" label='Code' placeholder='Code' defaultValue={tempSeason.tag} inputProps={ {ref:codeRef} }
+                      fullWidth name="code" label='Code' placeholder='Code' defaultValue={tempSeason.code} inputProps={ {ref:codeRef} }
                       onChange={(e) => {
-                        tempSeason.tag = e.target.value
+                        tempSeason.code = e.target.value
                         setTempSeason(tempSeason)
                       }}
                     />

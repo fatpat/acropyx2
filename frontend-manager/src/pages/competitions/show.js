@@ -121,7 +121,7 @@ const CompetitionPage = () => {
   const endDateRef = useRef()
   const locationRef = useRef()
   const inputRef = useRef()
-  const tagsRef = useRef()
+  const seasonsRef = useRef()
 
   const loadCompetition = async () => {
     setLoading(true)
@@ -203,7 +203,7 @@ const CompetitionPage = () => {
         published: tempComp.published,
         type: tempComp.type,
         image: image,
-        tags: tempComp.tags,
+        seasons: tempComp.seasons,
     }
 
     const [err, retData, headers] = await APIRequest(route, {
@@ -422,18 +422,18 @@ const CompetitionPage = () => {
         </Typography>
         <Typography>
           <Editable
-            text={tempComp.tags.length > 0 ? tempComp.tags.join(', ') : "none"}
-            title="Tags"
+            text={tempComp.seasons.length > 0 ? tempComp.seasons.join(', ') : "none"}
+            title="Seasons"
             onChange={updateCompetition}
             onCancel={(e) => {
               setTempComp(comp)
             }}
-            childRef={tagsRef}
+            childRef={seasonsRef}
           >
                     <TextField
-                      fullWidth name="tags" label='Tags' placeholder='Tags' defaultValue={tempComp.tags.join(', ')} inputProps={ {ref:tagsRef} }
+                      fullWidth name="seasons" label='Seasons' placeholder='Seasons' defaultValue={tempComp.seasons.join(', ')} inputProps={ {ref:seasonsRef} }
                       onChange={(e) => {
-                        tempComp.tags = e.target.value.split(/[, ]+/).filter(t => t != "")
+                        tempComp.seasons = e.target.value.split(/[, ]+/).filter(t => t != "")
                         setTempComp(tempComp)
                       }}
                     />

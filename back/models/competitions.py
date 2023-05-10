@@ -53,7 +53,7 @@ class CompetitionExport(BaseModel):
     config: CompetitionConfig
     runs: List[RunExport]
     image: Optional[AnyHttpUrl]
-    tags: List[str]
+    seasons: List[str]
 
     class Config:
         json_encoders = {ObjectId: str}
@@ -74,7 +74,7 @@ class CompetitionPublicExport(BaseModel):
     number_of_judges: int
     number_of_runs: int
     image: Optional[AnyHttpUrl]
-    tags: List[str]
+    seasons: List[str]
 
     class Config:
         json_encoders = {ObjectId: str}
@@ -94,7 +94,7 @@ class CompetitionNew(BaseModel):
     published: bool
     type: CompetitionType
     image: Optional[str]
-    tags: List[str] = Field([])
+    seasons: List[str] = Field([])
 
 
     async def create(self):
@@ -119,7 +119,7 @@ class CompetitionNew(BaseModel):
             runs = [],
             deleted = None,
             image = self.image,
-            tags = self.tags,
+            seasons = self.seasons,
         )
 
         return await competition.create()
@@ -135,7 +135,7 @@ class Competition(CompetitionNew):
     runs: List[Run]
     deleted: Optional[datetime]
     image: Optional[str]
-    tags: List[str] = Field([])
+    seasons: List[str] = Field([])
 
     class Config:
         allow_population_by_field_name = True
@@ -252,7 +252,7 @@ class Competition(CompetitionNew):
             config = self.config,
             runs = runs,
             image = self.image_url(),
-            tags = self.tags,
+            seasons = self.seasons,
         )
 
     async def export_public(self) -> CompetitionPublicExport:
@@ -274,7 +274,7 @@ class Competition(CompetitionNew):
             number_of_runs = len(self.runs),
             state = self.state,
             image = self.image_url(),
-            tags = self.tags,
+            seasons = self.seasons,
         )
 
     async def export_public_with_results(self, cache:dict = {}) -> CompetitionPublicExportWithResults:
@@ -306,7 +306,7 @@ class Competition(CompetitionNew):
             state = comp.state,
             results = await results.export(cache=cache),
             image = comp.image,
-            tags = comp.tags,
+            seasons = comp.seasons,
         )
 
 #    async def sort_pilots(self):
@@ -330,7 +330,7 @@ class Competition(CompetitionNew):
         self.image = updated_comp.image
         if self.image is not None:
             self.image = self.image.split('/')[-1]
-        self.tags = updated_comp.tags
+        self.seasons = updated_comp.seasons
 
         if self.type != updated_comp.type and self.state != CompetitionState.init:
             raise HTTPException(400, "Can't change the type of an already open or closed competition")
@@ -706,11 +706,11 @@ class Competition(CompetitionNew):
         return Competition.parse_obj(competition)
 
     @staticmethod
-    async def getall(tag: str = None):
+    async def getall(season: str = None):
         competitions = []
         for competition in await collection.find({"deleted": None}, sort=[("name", pymongo.ASCENDING)]).to_list(1000):
             competition = Competition.parse_obj(competition)
-            if tag is None or tag in competition.tags:
+            if season is None or season in competition.seasons:
                 competitions.append(competition)
         return competitions
 

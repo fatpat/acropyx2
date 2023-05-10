@@ -129,10 +129,10 @@ const SeasonsPage = () => {
     {
       id: 'name',
       type: 'LINK',
-      href: (v, season) => `/seasons/show?sid=${season.tag}`,
+      href: (v, season) => `/seasons/show?sid=${season.code}`,
     },
     {
-      id: 'tag',
+      id: 'code',
     },
     {
       id: 'type',
@@ -208,9 +208,9 @@ const SeasonsPage = () => {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
-                      fullWidth name="tag" label='tag' placeholder='Tag' defaultValue={newSeason.tag ?? ""}
+                      fullWidth name="code" label='code' placeholder='Code' defaultValue={newSeason.code ?? ""}
                       onChange={(e) => {
-                        newSeason.tag = e.target.value
+                        newSeason.code = e.target.value
                         setNewSeason(newSeason)
                       }}
                     />

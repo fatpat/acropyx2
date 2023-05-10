@@ -42,7 +42,7 @@ class SeasonResults(BaseModel):
 class SeasonExport(BaseModel):
     id: str = Field(alias="_id")
     name: str
-    tag: str
+    code: str
     year: int
     image: Optional[AnyHttpUrl]
     type: CompetitionType
@@ -60,7 +60,7 @@ class SeasonExport(BaseModel):
 class Season(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     name: str = Field(..., description="The name of the season", min_length=2)
-    tag: str = Field(description="The short code of the season", min_length=2)
+    code: str = Field(description="The short code of the season", min_length=2)
     year: int = Field(..., description="The year of the season", gt=1900)
     image: Optional[str]
     image_url: Optional[AnyHttpUrl]
@@ -74,7 +74,7 @@ class Season(BaseModel):
         schema_extra = {
             "example": {
                 "name": "Acro World Tour 2022",
-                "tag": "awt-2022"
+                "code": "awt-2022"
             }
         }
 
@@ -102,8 +102,8 @@ class Season(BaseModel):
     @staticmethod
     def createIndexes():
         collection.create_index([('name', pymongo.ASCENDING), ('deleted', pymongo.ASCENDING)], unique=True)
-        collection.create_index([('tag', pymongo.ASCENDING), ('deleted', pymongo.ASCENDING)], unique=True)
-        log.debug('index created on "name,deleted" and on "tag,deleted"')
+        collection.create_index([('code', pymongo.ASCENDING), ('deleted', pymongo.ASCENDING)], unique=True)
+        log.debug('index created on "name,deleted" and on "code,deleted"')
 
     @staticmethod
     async def get(id, deleted: bool = False, cache:dict = {}):
@@ -112,11 +112,11 @@ class Season(BaseModel):
 
         if not deleted and 'seasons' in cache:
             try:
-                return [j for j in cache['seasons'] if str(j.id) == id or j.tag == id][0]
+                return [j for j in cache['seasons'] if str(j.id) == id or j.code == id][0]
             except:
                 pass
 
-        search = {"$or": [{"_id": id}, {"tag": id}]}
+        search = {"$or": [{"_id": id}, {"code": id}]}
         if not deleted:
             search['deleted'] = None
 
@@ -174,7 +174,7 @@ class Season(BaseModel):
         teams = {}
         pilots = {}
 
-        for comp in await Competition.getall(tag=self.tag):
+        for comp in await Competition.getall(season=self.code):
             comp = await comp.export_public_with_results(cache=cache)
 
             # handle type and check that all comp of the season are of the same type
@@ -222,7 +222,7 @@ class Season(BaseModel):
         return SeasonExport(
             _id = str(self.id),
             name = self.name,
-            tag = self.tag,
+            code = self.code,
             year = self.year,
             image = self.get_image_url(),
             type = _type or CompetitionType.solo,
