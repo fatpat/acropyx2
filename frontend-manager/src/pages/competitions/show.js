@@ -189,6 +189,11 @@ const CompetitionPage = () => {
     var method = 'PATCH'
     var expected_status = 204
 
+    var image = null
+    if (tempComp.image != null) {
+      image = tempComp.image.split('/').at(-1)
+    }
+
     const updatedCompetition = {
         name: tempComp.name,
         code: tempComp.code,
@@ -197,7 +202,7 @@ const CompetitionPage = () => {
         location: tempComp.location,
         published: tempComp.published,
         type: tempComp.type,
-        image: tempComp.image,
+        image: image,
         tags: tempComp.tags,
     }
 

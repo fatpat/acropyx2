@@ -328,6 +328,8 @@ class Competition(CompetitionNew):
         self.location = updated_comp.location
         self.published = updated_comp.published
         self.image = updated_comp.image
+        if self.image is not None:
+            self.image = self.image.split('/')[-1]
         self.tags = updated_comp.tags
 
         if self.type != updated_comp.type and self.state != CompetitionState.init:
