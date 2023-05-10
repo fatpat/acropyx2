@@ -195,11 +195,17 @@ const SeasonPage = () => {
     var method = 'put'
     var expected_status = 204
 
+    var image = null
+    if (tempSeason.image != null) {
+      image = tempSeason.image.split('/').at(-1)
+    }
+
+
     const updatedSeason = {
         name: tempSeason.name,
         code: tempSeason.code,
         year: tempSeason.year,
-        image: tempSeason.image,
+        image: image,
     }
 
     const [err, retData, headers] = await APIRequest(route, {
@@ -261,7 +267,7 @@ const SeasonPage = () => {
           onChange={uploadImage}
         />  
         <Typography variant='h5' sx={{display: 'flex'}}>
-          <Avatar src={season.image_url} onClick={updateImage}>{season.acronym}</Avatar>
+          <Avatar src={season.image} onClick={updateImage}>{season.acronym}</Avatar>
           &nbsp;
           {season.name}<RefreshIcon className="hideToPrint" onClick={loadSeason} />
         </Typography>

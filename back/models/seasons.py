@@ -144,6 +144,9 @@ class Season(BaseModel):
     async def update(id: str, season_update):
         season = await Season.get(id)
         season_update.id = season.id
+        if season_update.image is not None:
+            season_update.image = season_update.image.split('/')[-1]
+
         await season_update.save()
 
     @staticmethod
