@@ -130,7 +130,7 @@ const CompetitionsPage = () => {
       id: 'type',
     },
     {
-      id: 'tags',
+      id: 'seasons',
       rewrite: (v) => v.join(', ')
     },
     {

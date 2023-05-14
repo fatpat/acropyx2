@@ -36,8 +36,8 @@ services:
     volumes:
       - ./frontend-manager:/app
     environment:
-#      - NEXT_PUBLIC_API_URL=http://127.0.0.1:8000
-      - NEXT_PUBLIC_API_URL=https://api-preprod.acroworldtour.com
+      - NEXT_PUBLIC_API_URL=http://127.0.0.1:8000
+#      - NEXT_PUBLIC_API_URL=https://api-preprod.acroworldtour.com
 
   mongodb:
     image: mongo:5.0
